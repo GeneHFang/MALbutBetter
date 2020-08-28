@@ -1,12 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import Component from './Component';
-<<<<<<< HEAD
 import Profile from './containers/Profile';
-import logo from './logo.svg';
-=======
 import logo from './logo2.svg';
-import Search from './Search'
->>>>>>> 4acb066ae906b6e27452f8cee7efba0793313446
+import Search from './components/Search'
 import './App.css';
 
 function App() {
@@ -20,11 +16,6 @@ function App() {
 
   return (
     <div className="App">
-<<<<<<< HEAD
-      {/* <Component number={number} setNumber={setNumber}></Component> */}
-      <br/>
-      <Profile/>
-=======
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -43,7 +34,6 @@ function App() {
           Worse Website
         </a>
       </header>
->>>>>>> 4acb066ae906b6e27452f8cee7efba0793313446
     </div>
   );
 }
