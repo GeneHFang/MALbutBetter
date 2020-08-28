@@ -1,25 +1,38 @@
-import React from 'react'; 
+import React, {useState} from 'react'; 
 import { InputGroup, DropdownButton, Dropdown, FormControl } from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 
 function Search() {
+    const [searchType, setSearchType] = useState("User");
     return (
         <div>
             <InputGroup className = "mb-3">
                 <DropdownButton
+                   
                     as = {InputGroup.Prepend}
                     variant = "outline-secondary"
-                    title = "Search Type"
+                    title = {`Search ${searchType}`}
                     id = "input-group-dropdown"
                 >
-                    <Dropdown.Item href="#">User</Dropdown.Item>
-                    <Dropdown.Item href="#">Anime</Dropdown.Item>
-                    <Dropdown.Item href="#">Manga</Dropdown.Item>
+                    <Dropdown.Item 
+                        href="#"
+                        onClick = {(e)=>setSearchType(e.target.innerText)}
+                        >User</Dropdown.Item>
+
+                    <Dropdown.Item
+                        href="#"
+                        onClick = {(e)=>setSearchType(e.target.innerText)}
+                        >Anime</Dropdown.Item>
+
+                    <Dropdown.Item 
+                        href="#"
+                        onClick = {(e)=>setSearchType(e.target.innerText)}
+                        >Manga</Dropdown.Item>
 
 
                 </DropdownButton>
                 <FormControl
-                    placeholder = "User or Title"
+                    placeholder = {`Name of ${searchType}`}
                     aria-label = "User or Title"
                     aria-describedby = "basic-addon1"
                 />
