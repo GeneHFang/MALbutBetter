@@ -15,7 +15,7 @@ function App() {
 
   return (
     <div className="App">
-      <Component number={number} setNumber={setNumber}></Component>
+      {/* <Component number={number} setNumber={setNumber}></Component> */}
       <br/>
       <Profile/>
     </div>
