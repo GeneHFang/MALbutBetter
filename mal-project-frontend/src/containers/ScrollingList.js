@@ -26,19 +26,30 @@ const ScrollingList = (props) => {
         5,
         6,7,8,9,10,11,12,13,14,15,16
     ];
-
-    const RenderCards = Cards.map(card=>{
-        return(
-            <MangaAnimeCard number={card} displayDetails={displayDetails}/>
-        )
-    }) 
+    
+    const RenderCards = () =>{
+            if(props.anime){
+                return props.anime.map(anime=>{
+                    //mal_id, url, image_url, name
+                   return <MangaAnimeCard number={anime.mal_id} name={anime.name} img={anime.image_url} url={anime.url} displayDetails={displayDetails}/>
+                })
+            }
+            else {
+                return Cards.map(card=>{
+                    return(
+                        <MangaAnimeCard number={card} displayDetails={displayDetails}/>
+                        )
+                    })
+                } 
+                
+    }
 
     return(
         <Fragment>
                 List here
             {detailDisplay ? <MangaAnimeDetails name={objDetails.name}/> : null }
             <div style={{display:"flex", flexWrap:"wrap"}}>
-                {RenderCards}
+                {RenderCards()}
             </div>
         </Fragment>
     );
