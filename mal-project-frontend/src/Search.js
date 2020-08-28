@@ -19,6 +19,7 @@ function Search() {
                         onClick = {(e)=>setSearchType(e.target.innerText)}
                         >User</Dropdown.Item>
 
+
                     <Dropdown.Item
                         href="#"
                         onClick = {(e)=>setSearchType(e.target.innerText)}
