@@ -1,4 +1,4 @@
-import React, {useState, Fragment} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import MangaAnimeCard from '../components/MangaAnimeCard';
 import MangaAnimeDetails from '../components/MangaAnimeDetails';
 
@@ -7,15 +7,39 @@ const ScrollingList = (props) => {
     const [detailDisplay, toggleDetailDisplay] = useState(false);
     const [objDetails, setObjDetails] = useState({});
 
+
+    const [trackMouse, setTrackMouse] = useState(false);
+    const [mouseX, setMouseX] = useState(-1);
+    const [mouseY, setMouseY] = useState(-1);
+
+    const [detailsPosition, setDetailsPosition] = useState({
+        position: "absolute",
+        border: "1px solid black",
+        backgroundColor: "white"
+    });
+
     const displayDetails = (boolArg, animeMangaName) => {
         toggleDetailDisplay(boolArg);
         if (boolArg){
+            setTrackMouse(true);
             setObjDetails({name: animeMangaName});
         }
         else{
+            setTrackMouse(false);
             setObjDetails({});
         }
     };
+
+    const getMousePosition = (mouseEvent) => {
+        // debugger;
+        setMouseX(mouseEvent.nativeEvent.pageX);
+        setMouseY(mouseEvent.nativeEvent.pageY);
+    };
+
+    useEffect(()=>{
+        // console.log("being moved");
+        setDetailsPosition({...detailsPosition, left: mouseX, top: mouseY})
+    }, [mouseX, mouseY]);
 
     //placeholder for array of Manga/Anime
     const Cards = [
@@ -28,10 +52,17 @@ const ScrollingList = (props) => {
     ];
     
     const RenderCards = () =>{
-            if(props.anime){
-                return props.anime.map(anime=>{
+            if(props.animemanga){
+                return props.animemanga.map(anime=>{
                     //mal_id, url, image_url, name
-                   return <MangaAnimeCard number={anime.mal_id} name={anime.name} img={anime.image_url} url={anime.url} displayDetails={displayDetails}/>
+                   return <MangaAnimeCard 
+                            number={anime.mal_id} 
+                            name={anime.name} 
+                            img={anime.image_url} 
+                            url={anime.url} 
+                            displayDetails={displayDetails} 
+                            mousePosition={getMousePosition}
+                            />
                 })
             }
             else {
@@ -47,7 +78,7 @@ const ScrollingList = (props) => {
     return(
         <Fragment>
                 List here
-            {detailDisplay ? <MangaAnimeDetails name={objDetails.name}/> : null }
+            {detailDisplay ? <MangaAnimeDetails name={objDetails.name} style={detailsPosition}/> : null }
             <div style={{display:"flex", flexWrap:"wrap"}}>
                 {RenderCards()}
             </div>

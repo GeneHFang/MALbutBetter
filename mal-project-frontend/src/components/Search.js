@@ -18,7 +18,7 @@ function Search(props) {
         //anime/manga search uses ID, whereas user search uses name 
         let query = parseQuery();
         
-        let searchURL = `http://api.jikan.moe/v3/${searchType.toLowerCase()}/${query}`;
+        let searchURL = `https://api.jikan.moe/v3/${searchType.toLowerCase()}/${query}`;
 
         props.search(searchURL);
     }

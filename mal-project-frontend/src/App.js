@@ -22,7 +22,9 @@ function App() {
   const search = (url) => {
     fetch(url)
       .then(res=>res.json())
-      .then(json=>setUserJson(json));
+      .then(json=>{
+        setUserJson(json);
+      });
   };
 
 

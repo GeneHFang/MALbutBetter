@@ -1,8 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 const MangaAnimeDetails = (props) => {
+
+    //Prevents memory leak
+    useEffect(() => {
+        return () => {
+          window.removeEventListener('mousemove', () => {})
+        }
+      }, []);
+
     return(
-        <div>
+        <div style={props.style}>
             hover details for Anime/Manga {props.name}
         </div>
     );
