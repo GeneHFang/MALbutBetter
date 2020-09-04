@@ -39,11 +39,11 @@ const Profile = (props) => {
             {props.userJson.about ?  <p>{props.userJson.about}</p> : <p>Bio Placeholder</p>}
         </div>
         <div>
-            <div className="tabs" style={{display:"flex"}}>
+            <div className="profile-tabs" style={{display:"flex"}}>
                 <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
                 <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": "")}}>Manga</p>
             </div>
-            <ScrollingList animemanga={MangaOrAnime()}/>
+            <ScrollingList animemanga={MangaOrAnime()} profile={true}/>
         </div>
         </Fragment>
     );

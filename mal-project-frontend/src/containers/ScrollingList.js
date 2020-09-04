@@ -19,6 +19,7 @@ const ScrollingList = (props) => {
     });
 
     const displayDetails = (boolArg, animeMangaName) => {
+        console.log(boolArg);
         toggleDetailDisplay(boolArg);
         if (boolArg){
             setTrackMouse(true);
@@ -44,23 +45,18 @@ const ScrollingList = (props) => {
         
     }, [mouseX, mouseY]);
 
-    //placeholder for array of Manga/Anime
-    const Cards = [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,7,8,9,10,11,12,13,14,15,16
-    ];
     
     const RenderCards = () =>{
             if(props.animemanga){
                 return props.animemanga.map(anime=>{
                     //mal_id, url, image_url, name
-                   return <MangaAnimeCard 
+                    let name = anime.title;
+                    if(props.profile){
+                        name = anime.name
+                    }
+                    return <MangaAnimeCard 
                             number={anime.mal_id} 
-                            name={anime.name} 
+                            name={name} 
                             img={anime.image_url} 
                             url={anime.url} 
                             displayDetails={displayDetails} 
@@ -79,13 +75,13 @@ const ScrollingList = (props) => {
     }
 
     return(
-        <Fragment>
+        <div className = "Scroll" >
                 List here
             {detailDisplay ? <MangaAnimeDetails name={objDetails.name} style={detailsPosition}/> : null }
-            <div style={{display:"flex", flexWrap:"wrap"}}>
+            <div style={{display:"flex", flexWrap:"wrap", backgroundColor: "#2d2f33"}}>
                 {RenderCards()}
             </div>
-        </Fragment>
+        </div>
     );
 }
 

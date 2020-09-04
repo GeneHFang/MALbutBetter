@@ -5,6 +5,7 @@ import Search from './components/Search'
 import AnimePage from './containers/AnimePage';
 import MangaPage from './containers/MangaPage'
 import type from './components/Search';
+import ScrollingList from './containers/ScrollingList';
 import './App.css';
 
 function App() {
@@ -14,6 +15,10 @@ function App() {
   const [userJson, setUserJson] = useState({});
   const [animeJson, setAnimeJson] = useState({});
   const [mangaJson, setMangaJson] = useState({});
+  const [showManga, setShowManga] = useState(false);
+  const [showAnime, setShowAnime] = useState(false);
+  const [topAnimeJson, setTopAnimeJson] = useState({});
+  const [topMangaJson, setTopMangaJson] = useState({});
 
   // useEffect(()=>{
   // fetch("http://api.jikan.moe/v3/anime/34012")
@@ -23,6 +28,28 @@ function App() {
   // },[searchStatus]);
 
   //jsondata.favorites.anime
+
+  useEffect(()=>{
+    fetch("https://api.jikan.moe/v3/top/anime/1")
+    .then(res=>res.json())
+    .then(json=>setTopAnimeJson(json));
+    console.log("fetching anime");
+  },[]);
+  useEffect(()=>{
+    fetch("https://api.jikan.moe/v3/top/manga/1")
+    .then(res=>res.json())
+    .then(json=>setTopMangaJson(json));
+    console.log("fetching manga");
+  },[]);
+
+  const MangaOrAnime = () => {
+    if (showAnime) {
+      return topAnimeJson.top;
+    }
+    else if (showManga) {
+      return topMangaJson.top;
+    }
+}
 
   const search = (url, type) => {
     setSearchType1(type);
@@ -61,6 +88,11 @@ function App() {
     <div className="App">
        {searchStatus === "presearch" 
         ? <header className="App-header">
+            <div className="home-tabs" style={{display:"flex"}}>
+                <p onClick={()=>{setShowAnime(false); setShowManga(false)}} style={{border:((!showAnime && !showManga) ? "1px solid black": "")}}>Search</p>
+                <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
+                <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": "")}}>Manga</p>
+            </div>
             <img src={logo} className="App-logo" alt="logo" />
             <p>
               But Better
@@ -68,7 +100,10 @@ function App() {
             <p>
               Interesting Text Here
             </p>
-          <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} /*searchType={searchType}*//>
+          
+            {showAnime || showManga 
+            ? <ScrollingList animemanga={MangaOrAnime()}/> 
+            : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} /*searchType={searchType}*//>}
             
             <a
               className="App-link"
