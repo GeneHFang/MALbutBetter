@@ -64,14 +64,6 @@ const ScrollingList = (props) => {
                             />
                 })
             }
-            else {
-                return Cards.map(card=>{
-                    return(
-                        <MangaAnimeCard number={card} displayDetails={displayDetails}/>
-                        )
-                    })
-                } 
-                
     }
 
     return(
