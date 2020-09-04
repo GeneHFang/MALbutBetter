@@ -31,14 +31,17 @@ const ScrollingList = (props) => {
     };
 
     const getMousePosition = (mouseEvent) => {
-        // debugger;
-        setMouseX(mouseEvent.nativeEvent.pageX);
-        setMouseY(mouseEvent.nativeEvent.pageY);
-    };
+        
+        if (mouseEvent){
+            setMouseX(mouseEvent.pageX);
+            setMouseY(mouseEvent.pageY);
+        }
+    }; 
 
     useEffect(()=>{
         // console.log("being moved");
-        setDetailsPosition({...detailsPosition, left: mouseX, top: mouseY})
+        setDetailsPosition({...detailsPosition, left: mouseX, top: mouseY});
+        
     }, [mouseX, mouseY]);
 
     //placeholder for array of Manga/Anime
