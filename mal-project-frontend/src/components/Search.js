@@ -21,14 +21,9 @@ function Search(props) {
         let query = parseQuery();
         
         let searchURL = `https://api.jikan.moe/v3/${searchType.toLowerCase()}/${query}`;
-<<<<<<< HEAD
-
-        props.search(searchURL);
-=======
         console.log(searchURL);
         //props.searchType(searchType);
         props.search(searchURL, searchType);
->>>>>>> a0fe635169b7fa2f351844efc6ab8ce5791ce1bd
     }
 
     return (

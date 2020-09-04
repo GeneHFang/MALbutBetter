@@ -38,17 +38,12 @@ const Profile = (props) => {
             <img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} />
             {props.userJson.about ?  <p>{props.userJson.about}</p> : <p>Bio Placeholder</p>}
         </div>
-<<<<<<< HEAD
         <div>
             <div className="tabs" style={{display:"flex"}}>
                 <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
                 <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": "")}}>Manga</p>
             </div>
             <ScrollingList animemanga={MangaOrAnime()}/>
-=======
-        <div className="scroll">
-            <ScrollingList anime={(props.userJson.favorites) ? props.userJson.favorites.anime : null}/>
->>>>>>> a0fe635169b7fa2f351844efc6ab8ce5791ce1bd
         </div>
         </Fragment>
     );
