@@ -8,7 +8,7 @@ import type from './components/Search';
 import ScrollingList from './containers/ScrollingList';
 import './App.css';
 
-function App() {
+function App() { 
   //const [number, setNumber] = useState(1);
   const [searchStatus, setSearchStatus] = useState("presearch");
   const [SearchType1, setSearchType1] = useState("");
