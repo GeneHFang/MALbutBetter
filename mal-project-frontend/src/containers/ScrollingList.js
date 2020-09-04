@@ -8,25 +8,22 @@ const ScrollingList = (props) => {
     const [objDetails, setObjDetails] = useState({});
 
 
-    const [trackMouse, setTrackMouse] = useState(false);
     const [mouseX, setMouseX] = useState(-1);
     const [mouseY, setMouseY] = useState(-1);
 
     const [detailsPosition, setDetailsPosition] = useState({
         position: "absolute",
         border: "1px solid black",
-        backgroundColor: "white"
+        backgroundColor: "white",
+        pointerEvents: "none"
     });
 
     const displayDetails = (boolArg, animeMangaName) => {
-        console.log(boolArg);
         toggleDetailDisplay(boolArg);
         if (boolArg){
-            setTrackMouse(true);
             setObjDetails({name: animeMangaName});
         }
         else{
-            setTrackMouse(false);
             setObjDetails({});
         }
     };
