@@ -44,10 +44,10 @@ function App() {
 
   const MangaOrAnime = () => {
     if (showAnime) {
-      return topAnimeJson.top;
+      return {topAnimeJson, searchType:"Anime"};
     }
     else if (showManga) {
-      return topMangaJson.top;
+      return {topMangaJson, searchType:"Manga"};
     }
 }
 
@@ -73,15 +73,15 @@ function App() {
   const renderContent = () => {
     if (SearchType1 === "User"){
       console.log(type);
-      return <Profile userJson={userJson} />
+      return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson}/>
     }
     if (SearchType1 === "Anime") {
       console.log(type);
-      return <AnimePage animeJson={animeJson} />
+      return <AnimePage animeJson={animeJson} reset={setSearchStatus}/>
     }
     if (SearchType1 === "Manga") {
       console.log(type);
-      return <MangaPage mangaJson={mangaJson} />
+      return <MangaPage mangaJson={mangaJson} reset={setSearchStatus}/>
     }
   }
   return (
@@ -102,7 +102,7 @@ function App() {
             </p>
           
             {showAnime || showManga 
-            ? <ScrollingList animemanga={MangaOrAnime()}/> 
+            ? <ScrollingList animemanga={MangaOrAnime()} mangaOrAnime={showAnime}/> 
             : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} /*searchType={searchType}*//>}
             
             <a
