@@ -7,20 +7,28 @@ function Search(props) {
     const [searchQuery, setSearchQuery] = useState("");
 
     const parseQuery = () => {
+        /*
         if (searchType==="User"){
             return searchQuery;
         }
+        */
+        return searchQuery;
     } 
 
     const submission = (e) => {
         props.setSearchStatus("postsearch");
-        
         //anime/manga search uses ID, whereas user search uses name 
         let query = parseQuery();
         
         let searchURL = `https://api.jikan.moe/v3/${searchType.toLowerCase()}/${query}`;
+<<<<<<< HEAD
 
         props.search(searchURL);
+=======
+        console.log(searchURL);
+        //props.searchType(searchType);
+        props.search(searchURL, searchType);
+>>>>>>> a0fe635169b7fa2f351844efc6ab8ce5791ce1bd
     }
 
     return (
@@ -35,18 +43,18 @@ function Search(props) {
                         >
                             <Dropdown.Item 
                                 href="#"
-                                onClick = {(e)=>setSearchType(e.target.innerText)}
+                                onClick = {(e)=>{setSearchType(e.target.innerText)}}
                                 >User</Dropdown.Item>
 
 
                             <Dropdown.Item
                                 href="#"
-                                onClick = {(e)=>setSearchType(e.target.innerText)}
+                                onClick = {(e)=>{setSearchType(e.target.innerText)}}
                                 >Anime</Dropdown.Item>
 
                             <Dropdown.Item 
                                 href="#"
-                                onClick = {(e)=>setSearchType(e.target.innerText)}
+                                onClick = {(e)=>{setSearchType(e.target.innerText)}}
                                 >Manga</Dropdown.Item>
 
 
@@ -61,7 +69,7 @@ function Search(props) {
                             }}
                             onKeyPress={e => {
                                 if (e.key === "Enter") {
-                                  submission();
+                                    submission();
                                 }
                               }}
                         />
