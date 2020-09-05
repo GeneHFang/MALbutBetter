@@ -4,10 +4,10 @@ const MangaAnimeCard = (props) => {
     const [timer, setTimer] = useState(null);
     const [flagged, setFlag] = useState(false);
     const [style, setStyle] = useState({
-        borderStyle:"solid",
-        borderColor:"black",
         flex: "1",
-        flexBasis: "25%"
+        flexBasis: "25%",
+        textDecoration: "none",
+        color:"inherit"
     });
 
     useEffect(()=>{
@@ -38,28 +38,29 @@ const MangaAnimeCard = (props) => {
         }
         props.displayDetails(false);
         setTimer(setTimeout(function(){
-            props.displayDetails(true, props.name);           
+            props.displayDetails(true, props.obj);           
         },700, e));
     }
 
     //before mouseMove (onMouseOver={(e)=>props.displayDetails(true, props.name)})
     return(
-        <div 
-            style={style}
-            onMouseOver={mouseOver} 
-            onMouseMove={mouseMove} 
-            onMouseOut={mouseOut}
-            onClick={(e)=>console.log("In here")}
-            ref={props.refCallback}
-            >
-                <img style={{width:"200px", height:"300px", pointerEvents:"none"}} src={props.img}/><br/>
-                {props.rank ? <Fragment>Rank: {props.rank}<br/></Fragment> : null }
-                Name : {props.name}<br/>
-                ID : {props.number}<br/>
-                <a href={props.url}>Link</a>
-                {/* Anime/Manga card  */}
-                
-        </div>
+        <a 
+        style={style} href={props.url}>
+            <div 
+                onMouseOver={mouseOver} 
+                onMouseMove={mouseMove} 
+                onMouseOut={mouseOut}
+                onClick={(e)=>console.log("In here")}
+                ref={props.refCallback}
+                >
+                    <img style={{width:"200px", height:"300px", pointerEvents:"none"}} src={props.img}/><br/>
+                    {props.rank ? <Fragment>Rank: {props.rank}<br/></Fragment> : null }
+                    {props.name}<br/>
+                    {/* ID : {props.number}<br/> */}
+                    {/* Anime/Manga card  */}
+                    
+            </div>
+        </a>
     );
 }
 

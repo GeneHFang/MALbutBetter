@@ -89,9 +89,9 @@ function App() {
        {searchStatus === "presearch" 
         ? <header className="App-header">
             <div className="home-tabs" style={{display:"flex"}}>
-                <p onClick={()=>{setShowAnime(false); setShowManga(false)}} style={{border:((!showAnime && !showManga) ? "1px solid black": "")}}>Search</p>
-                <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
-                <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": "")}}>Manga</p>
+                <p onClick={()=>{setShowAnime(false); setShowManga(false)}} style={{border:((!showAnime && !showManga) ? "1px solid black": ""),margin: "5px"}}>Search</p>
+                <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": ""),margin: "5px"}}>Anime</p>
+                <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": ""),margin: "5px"}}>Manga</p>
             </div>
             <img src={logo} className="App-logo" alt="logo" />
             <p>

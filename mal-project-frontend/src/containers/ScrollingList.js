@@ -44,10 +44,10 @@ const ScrollingList = (props) => {
         [loading, hasMore]
     )
     
-    const displayDetails = (boolArg, animeMangaName) => {
+    const displayDetails = (boolArg, animeManga) => {
         toggleDetailDisplay(boolArg);
         if (boolArg){
-            setObjDetails({name: animeMangaName});
+            setObjDetails(animeManga);
         }
         else{
             setObjDetails({});
@@ -85,6 +85,7 @@ const ScrollingList = (props) => {
                         ref = lastAnimeMangaElementRef;
                     }
                     return <MangaAnimeCard 
+                            obj={anime}
                             number={anime.mal_id}
                             rank={anime.rank} 
                             name={name} 
@@ -103,7 +104,8 @@ const ScrollingList = (props) => {
                     if(props.profile){
                         name = anime.name
                     }
-                    return <MangaAnimeCard 
+                    return <MangaAnimeCard
+                            obj={anime} 
                             number={anime.mal_id} 
                             name={name} 
                             img={anime.image_url} 
@@ -117,8 +119,7 @@ const ScrollingList = (props) => {
 
     return(
         <div className = "Scroll" >
-                List here
-            {detailDisplay ? <MangaAnimeDetails name={objDetails.name} style={detailsPosition}/> : null }
+            {detailDisplay ? <MangaAnimeDetails obj={objDetails} style={detailsPosition}/> : null }
             <div style={{display:"flex", flexWrap:"wrap", backgroundColor: "#2d2f33"}}>
                 {RenderCards()}
             </div>
