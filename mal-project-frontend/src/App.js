@@ -17,37 +17,13 @@ function App() {
   const [mangaJson, setMangaJson] = useState({});
   const [showManga, setShowManga] = useState(false);
   const [showAnime, setShowAnime] = useState(false);
-  const [topAnimeJson, setTopAnimeJson] = useState({});
-  const [topMangaJson, setTopMangaJson] = useState({});
-
-  // useEffect(()=>{
-  // fetch("http://api.jikan.moe/v3/anime/34012")
-  // .then(res=>res.json())
-  // .then(json=>console.log(json));
-  //   console.log("fetching");
-  // },[searchStatus]);
-
-  //jsondata.favorites.anime
-
-  useEffect(()=>{
-    fetch("https://api.jikan.moe/v3/top/anime/1")
-    .then(res=>res.json())
-    .then(json=>setTopAnimeJson(json));
-    console.log("fetching anime");
-  },[]);
-  useEffect(()=>{
-    fetch("https://api.jikan.moe/v3/top/manga/1")
-    .then(res=>res.json())
-    .then(json=>setTopMangaJson(json));
-    console.log("fetching manga");
-  },[]);
 
   const MangaOrAnime = () => {
     if (showAnime) {
-      return {topAnimeJson, searchType:"Anime"};
+      return { searchType:"Anime"};
     }
     else if (showManga) {
-      return {topMangaJson, searchType:"Manga"};
+      return { searchType:"Manga"};
     }
 }
 
