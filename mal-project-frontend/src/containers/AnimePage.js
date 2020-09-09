@@ -4,7 +4,6 @@ import '../AnimePage.css'
 import defaultImage from '../images/ProfilePlaceholderTemp.jpg';
 
 const AnimePage = (props) => {
-    const [img, setImg] = useState("");
 
     return(
         <Fragment>

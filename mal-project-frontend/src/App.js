@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import Profile from './containers/Profile';
 import logo from './logo2.svg';
 import Search from './components/Search'
+import AnimeSearchPage from './containers/AnimeSearchPage'
+import MangaSearchPage from './containers/MangaSearchPage'
 import AnimePage from './containers/AnimePage';
 import MangaPage from './containers/MangaPage'
 import type from './components/Search';
@@ -52,12 +54,16 @@ function App() {
       return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson}/>
     }
     if (SearchType1 === "Anime") {
-      console.log(type);
+      /*
+      return <AnimeSearchPage animeJson={animeJson} />
       return <AnimePage animeJson={animeJson} reset={setSearchStatus}/>
+      */
     }
     if (SearchType1 === "Manga") {
-      console.log(type);
+      /*
+      return <MangaSearchPage mangaJson={mangaJson} />
       return <MangaPage mangaJson={mangaJson} reset={setSearchStatus}/>
+      */
     }
   }
   return (
