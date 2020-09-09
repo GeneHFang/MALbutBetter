@@ -19,16 +19,27 @@ const Profile = (props) => {
     const [showManga, setShowManga] = useState(false);
     const [showAnime, setShowAnime] = useState(true);
 
-    const MangaOrAnime = () => {
+    const [jsonArray, setJsonArray] = useState([]); 
+
+    useEffect(() => {
         if (props.userJson.favorites){
-         return showAnime 
-                ? props.userJson.favorites.anime 
-                : props.userJson.favorites.manga
+            let array = [];
+            if (showAnime){
+                props.userJson.favorites.anime.forEach(anime=>{
+                    let animeObj = {...anime, type: "anime"};
+                    array.push(animeObj);
+                })
+            }
+            else if (showManga){
+                props.userJson.favorites.manga.forEach(manga=>{
+                    let mangaObj = {...manga, type: "manga"};
+                    array.push(mangaObj);
+                })
+            }
+
+            setJsonArray(array);
         }
-        else {
-            return [];
-        }
-    }
+    }, [props.userJson, showAnime, showManga]);
 
     const goHome = () =>{
         props.resetUser({});
@@ -49,7 +60,7 @@ const Profile = (props) => {
                 <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
                 <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": "")}}>Manga</p>
             </div>
-            <ScrollingList animemanga={MangaOrAnime()} profile={true}/>
+            <ScrollingList animemanga={jsonArray} notTop={true} profile={true} showSingle={props.showSingle}/>
         </div>
         </Fragment>
     );

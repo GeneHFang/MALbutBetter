@@ -42,15 +42,20 @@ const MangaAnimeCard = (props) => {
         },700, e));
     }
 
+    const handleClick = () => {
+        props.showSingle(props.type, props.mal_id);
+    }
+
     //before mouseMove (onMouseOver={(e)=>props.displayDetails(true, props.name)})
     return(
-        <a 
-        style={style} href={props.url}>
+        // <a 
+        //  href={props.url}>
             <div 
+                style={style}
                 onMouseOver={mouseOver} 
                 onMouseMove={mouseMove} 
                 onMouseOut={mouseOut}
-                onClick={(e)=>console.log("In here")}
+                onClick={handleClick}
                 ref={props.refCallback}
                 >
                     <img style={{width:"200px", height:"300px", pointerEvents:"none"}} src={props.img}/><br/>
@@ -60,7 +65,7 @@ const MangaAnimeCard = (props) => {
                     {/* Anime/Manga card  */}
                     
             </div>
-        </a>
+        // </a>
     );
 }
 

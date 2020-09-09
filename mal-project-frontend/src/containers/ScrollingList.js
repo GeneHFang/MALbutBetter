@@ -21,7 +21,7 @@ const ScrollingList = (props) => {
         pointerEvents: "none"
     });
 
-    const {loading, error, animeMangas, hasMore} = useAnimeMangaSearch(page, props.animemanga.searchType ? props.animemanga.searchType.toLowerCase() : "", props.profile);
+    const {loading, error, animeMangas, hasMore} = useAnimeMangaSearch(page, props.animemanga.searchType ? props.animemanga.searchType.toLowerCase() : "", props.notTop);
     
     // useAnimeMangaSearch(page, props.animeManga.searchType);
     //inf scrolling
@@ -73,12 +73,12 @@ const ScrollingList = (props) => {
 
     
     const RenderCards = () =>{
-            if(animeMangas && !props.profile){
+            if(animeMangas && !props.notTop){
                 return animeMangas.map((anime,index)=>{
                     //mal_id, url, image_url, name
                     let name = anime.title;
                     let ref = null;
-                    if(props.profile){
+                    if(props.notTop){
                         name = anime.name
                     }
                     if(animeMangas.length===index+1){      
@@ -86,7 +86,7 @@ const ScrollingList = (props) => {
                     }
                     return <MangaAnimeCard 
                             obj={anime}
-                            number={anime.mal_id}
+                            mal_id={anime.mal_id}
                             rank={anime.rank} 
                             name={name} 
                             img={anime.image_url} 
@@ -94,6 +94,8 @@ const ScrollingList = (props) => {
                             displayDetails={displayDetails} 
                             mousePosition={getMousePosition}
                             refCallback={ref}
+                            showSingle={props.showSingle}
+                            type={anime.type}
                             />
                 })
             }
@@ -106,12 +108,14 @@ const ScrollingList = (props) => {
                     }
                     return <MangaAnimeCard
                             obj={anime} 
-                            number={anime.mal_id} 
+                            mal_id={anime.mal_id} 
                             name={name} 
                             img={anime.image_url} 
                             url={anime.url} 
                             displayDetails={displayDetails} 
                             mousePosition={getMousePosition}
+                            showSingle={props.showSingle}
+                            type={anime.type}
                             />
                 })
             }
@@ -123,8 +127,8 @@ const ScrollingList = (props) => {
             <div style={{display:"flex", flexWrap:"wrap", backgroundColor: "#2d2f33"}}>
                 {RenderCards()}
             </div>
-            <div>{loading && !props.profile && "Loading..."}</div>
-            <div>{error && !props.profile && "Error!"}</div>
+            <div>{loading && !props.notTop && "Loading..."}</div>
+            <div>{error && !props.notTop && "Error!"}</div>
         </div>
     );
 }

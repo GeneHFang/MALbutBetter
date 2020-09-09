@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Profile from './containers/Profile';
 import logo from './logo2.svg';
 import Search from './components/Search'
-import AnimeSearchPage from './containers/AnimeSearchPage'
-import MangaSearchPage from './containers/MangaSearchPage'
+import SearchPage from './containers/SearchPage'
 import AnimePage from './containers/AnimePage';
 import MangaPage from './containers/MangaPage'
 import type from './components/Search';
@@ -17,8 +16,21 @@ function App() {
   const [userJson, setUserJson] = useState({});
   const [animeJson, setAnimeJson] = useState({});
   const [mangaJson, setMangaJson] = useState({});
+  
+  //Show for top
   const [showManga, setShowManga] = useState(false);
   const [showAnime, setShowAnime] = useState(false);
+
+  //Show for single result
+  const [showSingleManga, setShowSingleManga] = useState(false);
+  const [showSingleAnime, setShowSingleAnime] = useState(false);
+  const [mal_id, setmal_id] = useState({});
+
+  useEffect(()=>{
+    return ()=>{
+      //cleanup, warning for state update on unmounted component. Get to this later
+    }
+  }, [])
 
   const MangaOrAnime = () => {
     if (showAnime) {
@@ -39,7 +51,10 @@ function App() {
     if (type === "Anime"){
       fetch(url)
       .then(res=>res.json())
-      .then(json=>setAnimeJson(json));
+      .then(json=>{
+        //console.log(json);
+        setAnimeJson(json);
+      });
     }
     if (type === "Manga"){
       fetch(url)
@@ -50,22 +65,36 @@ function App() {
   
   const renderContent = () => {
     if (SearchType1 === "User"){
-      console.log(type);
-      return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson}/>
+      console.log("Here");
+      return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson} showSingle={showSingle}/>
     }
-    if (SearchType1 === "Anime") {
-      /*
-      return <AnimeSearchPage animeJson={animeJson} />
-      return <AnimePage animeJson={animeJson} reset={setSearchStatus}/>
-      */
+    else if (SearchType1 === "Anime" || SearchType1 === "Manga") {
+      console.log("here with SearchType1===Anime ", SearchType1==="Anime" );
+      console.log("This is the animeJson: ", animeJson);
+      return <SearchPage resJson={SearchType1==="Anime" ? animeJson : mangaJson} reset={setSearchStatus} showSingle={showSingle}/> 
     }
-    if (SearchType1 === "Manga") {
-      /*
-      return <MangaSearchPage mangaJson={mangaJson} />
-      return <MangaPage mangaJson={mangaJson} reset={setSearchStatus}/>
-      */
+    else if (showSingleAnime){
+      //render single anime/manga page
+      return <AnimePage mal_id={mal_id}/>
+    }
+    else if (showSingleManga){
+      return <MangaPage mal_id={mal_id}/>
     }
   }
+  const showSingle = (type, mal_id) => {
+    setmal_id(mal_id);
+    setSearchType1("");
+    setShowManga(false);
+    setShowAnime(false);
+    setSearchStatus("notpresearch");
+    if (type==="manga") {
+      setShowSingleManga(true);
+    } 
+    else {
+      setShowSingleAnime(true);
+    }
+  }
+  
   return (
     <div className="App">
        {searchStatus === "presearch" 
@@ -84,7 +113,7 @@ function App() {
             </p>
           
             {showAnime || showManga 
-            ? <ScrollingList animemanga={MangaOrAnime()} mangaOrAnime={showAnime}/> 
+            ? <ScrollingList animemanga={MangaOrAnime()} mangaOrAnime={showAnime} showSingle={showSingle}/> 
             : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} /*searchType={searchType}*//>}
             
             <a
