@@ -1,8 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {Fragment, useState, useEffect} from 'react';
 
 const MangaAnimeCard = (props) => {
-    const [track, setTrack] = useState(false);
-    let timer = null;
+    const [timer, setTimer] = useState(null);
+    const [flagged, setFlag] = useState(false);
+    const [style, setStyle] = useState({
+        flex: "1",
+        flexBasis: "25%",
+        textDecoration: "none",
+        color:"inherit"
+    });
 
     useEffect(()=>{
         
@@ -11,46 +17,50 @@ const MangaAnimeCard = (props) => {
     }, []);
 
     const mouseMove = (event)=> {
-        
         let e = event.nativeEvent
         props.mousePosition(e);
     }
 
     const mouseOut = ()=>{
+        setStyle({...style, backgroundColor:""});
         clearTimeout(timer);
         props.displayDetails(false);
+        setFlag(false);
     }
 
     const mouseOver = (event) => {
+        setStyle({...style, backgroundColor:"#484c53"});
         clearTimeout(timer);
         let e = event.nativeEvent
+        if (!flagged) {
+            setFlag(true);
+            props.mousePosition(e);
+        }
         props.displayDetails(false);
-        timer = setTimeout(function(){
-            if (track){
-                props.displayDetails(true, props.name);
-            }
-            else{
-                props.displayDetails(false);
-            }
-        },700, e);
+        setTimer(setTimeout(function(){
+            props.displayDetails(true, props.obj);           
+        },700, e));
     }
 
     //before mouseMove (onMouseOver={(e)=>props.displayDetails(true, props.name)})
     return(
-        <div 
-            style={{borderStyle:"solid", borderColor:"black"}}
-            onMouseEnter={()=>setTrack(true)}
-            onMouseOver={mouseOver} 
-            onMouseMove={mouseMove} 
-            onMouseOut={mouseOut}>
-                <img style={{width:"200px", height:"300px"}} src={props.img}/><br/>
-                Name : {props.name}<br/>
-                ID : {props.number}<br/>
-                <a href={props.url}>Link</a>
-                {/* Anime/Manga card  */}
-            
-                
-        </div>
+        <a 
+        style={style} href={props.url}>
+            <div 
+                onMouseOver={mouseOver} 
+                onMouseMove={mouseMove} 
+                onMouseOut={mouseOut}
+                onClick={(e)=>console.log("In here")}
+                ref={props.refCallback}
+                >
+                    <img style={{width:"200px", height:"300px", pointerEvents:"none"}} src={props.img}/><br/>
+                    {props.rank ? <Fragment>Rank: {props.rank}<br/></Fragment> : null }
+                    {props.name}<br/>
+                    {/* ID : {props.number}<br/> */}
+                    {/* Anime/Manga card  */}
+                    
+            </div>
+        </a>
     );
 }
 

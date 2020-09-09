@@ -30,10 +30,16 @@ const Profile = (props) => {
         }
     }
 
+    const goHome = () =>{
+        props.resetUser({});
+        props.resetPage("presearch");
+    }
+
 
     return(
         
         <Fragment>
+        <p onClick={goHome}>Home</p>
         <div className="profile" style={{display:"flex"}}>
             <img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} />
             {props.userJson.about ?  <p>{props.userJson.about}</p> : <p>Bio Placeholder</p>}
