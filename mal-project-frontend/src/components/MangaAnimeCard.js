@@ -48,6 +48,7 @@ const MangaAnimeCard = (props) => {
                 ID : {props.number}<br/>
                 <a href={props.url}>Link</a>
                 {/* Anime/Manga card  */}
+            
                 
         </div>
     );
