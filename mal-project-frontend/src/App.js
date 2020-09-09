@@ -17,37 +17,13 @@ function App() {
   const [mangaJson, setMangaJson] = useState({});
   const [showManga, setShowManga] = useState(false);
   const [showAnime, setShowAnime] = useState(false);
-  const [topAnimeJson, setTopAnimeJson] = useState({});
-  const [topMangaJson, setTopMangaJson] = useState({});
-
-  // useEffect(()=>{
-  // fetch("http://api.jikan.moe/v3/anime/34012")
-  // .then(res=>res.json())
-  // .then(json=>console.log(json));
-  //   console.log("fetching");
-  // },[searchStatus]);
-
-  //jsondata.favorites.anime
-
-  useEffect(()=>{
-    fetch("https://api.jikan.moe/v3/top/anime/1")
-    .then(res=>res.json())
-    .then(json=>setTopAnimeJson(json));
-    console.log("fetching anime");
-  },[]);
-  useEffect(()=>{
-    fetch("https://api.jikan.moe/v3/top/manga/1")
-    .then(res=>res.json())
-    .then(json=>setTopMangaJson(json));
-    console.log("fetching manga");
-  },[]);
 
   const MangaOrAnime = () => {
     if (showAnime) {
-      return topAnimeJson.top;
+      return { searchType:"Anime"};
     }
     else if (showManga) {
-      return topMangaJson.top;
+      return { searchType:"Manga"};
     }
 }
 
@@ -73,15 +49,15 @@ function App() {
   const renderContent = () => {
     if (SearchType1 === "User"){
       console.log(type);
-      return <Profile userJson={userJson} />
+      return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson}/>
     }
     if (SearchType1 === "Anime") {
       console.log(type);
-      return <AnimePage animeJson={animeJson} />
+      return <AnimePage animeJson={animeJson} reset={setSearchStatus}/>
     }
     if (SearchType1 === "Manga") {
       console.log(type);
-      return <MangaPage mangaJson={mangaJson} />
+      return <MangaPage mangaJson={mangaJson} reset={setSearchStatus}/>
     }
   }
   return (
@@ -89,9 +65,9 @@ function App() {
        {searchStatus === "presearch" 
         ? <header className="App-header">
             <div className="home-tabs" style={{display:"flex"}}>
-                <p onClick={()=>{setShowAnime(false); setShowManga(false)}} style={{border:((!showAnime && !showManga) ? "1px solid black": "")}}>Search</p>
-                <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
-                <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": "")}}>Manga</p>
+                <p onClick={()=>{setShowAnime(false); setShowManga(false)}} style={{border:((!showAnime && !showManga) ? "1px solid black": ""),margin: "5px"}}>Search</p>
+                <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": ""),margin: "5px"}}>Anime</p>
+                <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": ""),margin: "5px"}}>Manga</p>
             </div>
             <img src={logo} className="App-logo" alt="logo" />
             <p>
@@ -102,7 +78,7 @@ function App() {
             </p>
           
             {showAnime || showManga 
-            ? <ScrollingList animemanga={MangaOrAnime()}/> 
+            ? <ScrollingList animemanga={MangaOrAnime()} mangaOrAnime={showAnime}/> 
             : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} /*searchType={searchType}*//>}
             
             <a

@@ -1,32 +1,55 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import MangaAnimeCard from '../components/MangaAnimeCard';
 import MangaAnimeDetails from '../components/MangaAnimeDetails';
+import useAnimeMangaSearch from '../hooks/useAnimeMangaSearch';
 
 const ScrollingList = (props) => {
+
+    const [page, setPage] = useState(1);
 
     const [detailDisplay, toggleDetailDisplay] = useState(false);
     const [objDetails, setObjDetails] = useState({});
 
 
-    const [trackMouse, setTrackMouse] = useState(false);
     const [mouseX, setMouseX] = useState(-1);
     const [mouseY, setMouseY] = useState(-1);
 
     const [detailsPosition, setDetailsPosition] = useState({
         position: "absolute",
         border: "1px solid black",
-        backgroundColor: "white"
+        backgroundColor: "white",
+        pointerEvents: "none"
     });
 
-    const displayDetails = (boolArg, animeMangaName) => {
-        console.log(boolArg);
+    const {loading, error, animeMangas, hasMore} = useAnimeMangaSearch(page, props.animemanga.searchType ? props.animemanga.searchType.toLowerCase() : "", props.profile);
+    
+    // useAnimeMangaSearch(page, props.animeManga.searchType);
+    //inf scrolling
+
+    const observer = useRef();
+    const lastAnimeMangaElementRef = useCallback(node => {
+            if (loading) { return; }
+            if (observer.current) { observer.current.disconnect(); }
+            
+            observer.current = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting &&hasMore) {
+                    setPage(prevPage => prevPage+1);
+                    // console.log("visible")
+                }
+            });
+            
+            if (node) { observer.current.observe(node); }
+            console.log(node);
+        },
+        [loading, hasMore]
+    )
+    
+    const displayDetails = (boolArg, animeManga) => {
         toggleDetailDisplay(boolArg);
         if (boolArg){
-            setTrackMouse(true);
-            setObjDetails({name: animeMangaName});
+            setObjDetails(animeManga);
         }
         else{
-            setTrackMouse(false);
             setObjDetails({});
         }
     };
@@ -44,17 +67,45 @@ const ScrollingList = (props) => {
         setDetailsPosition({...detailsPosition, left: mouseX, top: mouseY});
         
     }, [mouseX, mouseY]);
+    useEffect(()=>{
+        setPage(1);
+    },[props.mangaOrAnime])
 
     
     const RenderCards = () =>{
-            if(props.animemanga){
+            if(animeMangas && !props.profile){
+                return animeMangas.map((anime,index)=>{
+                    //mal_id, url, image_url, name
+                    let name = anime.title;
+                    let ref = null;
+                    if(props.profile){
+                        name = anime.name
+                    }
+                    if(animeMangas.length===index+1){      
+                        ref = lastAnimeMangaElementRef;
+                    }
+                    return <MangaAnimeCard 
+                            obj={anime}
+                            number={anime.mal_id}
+                            rank={anime.rank} 
+                            name={name} 
+                            img={anime.image_url} 
+                            url={anime.url} 
+                            displayDetails={displayDetails} 
+                            mousePosition={getMousePosition}
+                            refCallback={ref}
+                            />
+                })
+            }
+            else if(props.animemanga){
                 return props.animemanga.map(anime=>{
                     //mal_id, url, image_url, name
                     let name = anime.title;
                     if(props.profile){
                         name = anime.name
                     }
-                    return <MangaAnimeCard 
+                    return <MangaAnimeCard
+                            obj={anime} 
                             number={anime.mal_id} 
                             name={name} 
                             img={anime.image_url} 
@@ -68,11 +119,12 @@ const ScrollingList = (props) => {
 
     return(
         <div className = "Scroll" >
-                List here
-            {detailDisplay ? <MangaAnimeDetails name={objDetails.name} style={detailsPosition}/> : null }
+            {detailDisplay ? <MangaAnimeDetails obj={objDetails} style={detailsPosition}/> : null }
             <div style={{display:"flex", flexWrap:"wrap", backgroundColor: "#2d2f33"}}>
                 {RenderCards()}
             </div>
+            <div>{loading && !props.profile && "Loading..."}</div>
+            <div>{error && !props.profile && "Error!"}</div>
         </div>
     );
 }
