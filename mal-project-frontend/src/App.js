@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import Profile from './containers/Profile';
 import logo from './logo2.svg';
-import Search from './components/Search'
-import SearchPage from './containers/SearchPage'
+import Search from './components/Search';
+import SearchBar from './containers/SearchBar';
+import SearchPage from './containers/SearchPage';
 import AnimePage from './containers/AnimePage';
-import MangaPage from './containers/MangaPage'
-import type from './components/Search';
+import MangaPage from './containers/MangaPage';
 import ScrollingList from './containers/ScrollingList';
 import './App.css';
 
@@ -97,6 +97,14 @@ function App() {
   
   return (
     <div className="App">
+      {
+        searchStatus !== "presearch" || showAnime || showManga
+          ?
+            <div className="App-search">
+              <SearchBar setSearchStatus={setSearchStatus} search={search}/>
+            </div>
+          : null
+      }
        {searchStatus === "presearch" 
         ? <header className="App-header">
             <div className="home-tabs" style={{display:"flex"}}>
