@@ -1,7 +1,7 @@
 import React, {useEffect, useState, Fragment} from 'react';
 import '../AnimePage.css'
 
-import defaultImage from '../images/ProfilePlaceholderTemp.jpg';
+import defaultImage from '../images/backgroundtemp.jpg';
 
 const AnimePage = (props) => {
     const [info, setInfo] = useState({});
@@ -62,19 +62,26 @@ const AnimePage = (props) => {
         <Fragment>
             { info.aired 
                 ? <Fragment>
-                    <img src={info.image_url} />
-                    {info.title}
-                    Air dates : {info.aired.string}
-                    Episode num : {info.episodes}
-                    Score : {info.score}
-                    Rank : {info.rank}
-                    URL : <a target="_blank" href={info.url}>MAL Link</a>
-                    
+                    <div class="bg-image">
+                        <img src={info.image_url ? defaultImage : defaultImage} />
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <img src={info.image_url} />
+                            <p>{info.title}</p>
+                        </div>
+                        <div class="column">
+                            <p>Dates Aired : {info.aired.string}</p>
+                            <p>Episodes : {info.episodes}</p>
+                            <p>Score : {info.score}</p>
+                            <p>Rank : {info.rank}</p>
+                            <p>{info.synopsis}</p>
+                            URL : <a target="_blank" href={info.url}>MAL Link</a>    
+                        </div>
+                    </div>
                 </Fragment>
                 :
                 null    
-                
-                
             }
         </Fragment>
     );
