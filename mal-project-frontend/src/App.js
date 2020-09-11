@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Button} from 'react-bootstrap';
 import Profile from './containers/Profile';
 import logo from './logo2.svg';
 import Search from './components/Search';
@@ -101,7 +102,7 @@ function App() {
         searchStatus !== "presearch" || showAnime || showManga
           ?
             <div className="App-search">
-              <SearchBar setSearchStatus={setSearchStatus} search={search}/>
+              <Button variant="outline-primary"  onClick={()=>{setSearchStatus("presearch"); setShowAnime(false); setShowManga(false)}}> Home </Button> <SearchBar setSearchStatus={setSearchStatus} search={search}/>
             </div>
           : null
       }
