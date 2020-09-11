@@ -35,7 +35,7 @@ function Search(props) {
 
     return (
         <div className={props.className}> 
-                    <InputGroup className = "mb-3">
+                    <InputGroup>
                         <DropdownButton
                         
                             as = {InputGroup.Prepend}

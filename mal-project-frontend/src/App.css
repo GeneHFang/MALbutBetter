@@ -17,10 +17,12 @@
 .App-search {
   background-color: #2d2f33;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
   font-size: calc(10px + 2vmin);
   color: #3B90FF;
+  width: 100%;
 }
 
 .App-header {

@@ -59,9 +59,9 @@ const AnimePage = (props) => {
     */
 
     return(
-        <Fragment>
+        <div id="wrapper">
             { info.aired 
-                ? <Fragment>
+                ? <div id="wrapper">
                     <div class="bg-image">
                         <img src={info.image_url ? defaultImage : defaultImage} />
                     </div>
@@ -79,11 +79,11 @@ const AnimePage = (props) => {
                             URL : <a target="_blank" href={info.url}>MAL Link</a>    
                         </div>
                     </div>
-                </Fragment>
+                </div>
                 :
                 null    
             }
-        </Fragment>
+        </div>
     );
 }
 
