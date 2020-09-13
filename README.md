@@ -16,16 +16,18 @@
 
 
 ### Current Status
-  As of 9-10-2020: 
+  As of 9-10-2020:
+  
     -Browse top Manga or Anime in highest overall rank to lowest
     -Search (uses Jikan's search endpoint)
      -Manga or Anime by name
      -User by MyAnimeList username
-   -See individual Manga or Anime information per info available from MyAnimeList
+    -See individual Manga or Anime information per info available from MyAnimeList
   
 
 ### Known issues and development notes
   As of 9-10-2020:
+  
     -There is currently no error handling related to search queries that don't return any results
     -User profile page is currently under development and lacks both polish and functionality
     -Search queries are currently erased when searching
