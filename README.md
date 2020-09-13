@@ -1,5 +1,7 @@
 #MAL Browser WIP project
+
 ##By GeneFang and [Myschu](https://github.com/Myschu)
+
 ###This project is currently a front-end only ReactJS project that uses [Jikan, the unofficial MyAnimeList API](https://jikan.docs.apiary.io/) to browse a more compact version of [MyAnimeList](https://myanimelist.net/).
 
 To run:
