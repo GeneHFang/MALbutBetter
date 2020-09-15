@@ -3,6 +3,7 @@ import {Button} from 'react-bootstrap';
 import Profile from './containers/Profile';
 import logo from './logo2.svg';
 import Search from './components/Search';
+import Error from './components/Error';
 import SearchBar from './containers/SearchBar';
 import SearchPage from './containers/SearchPage';
 import AnimePage from './containers/AnimePage';
@@ -17,6 +18,7 @@ function App() {
   const [userJson, setUserJson] = useState({});
   const [animeJson, setAnimeJson] = useState({});
   const [mangaJson, setMangaJson] = useState({});
+  const [errorMsg, setErrorMsg] = useState({});
   
   //Show for top
   const [showManga, setShowManga] = useState(false);
@@ -26,12 +28,26 @@ function App() {
   const [showSingleManga, setShowSingleManga] = useState(false);
   const [showSingleAnime, setShowSingleAnime] = useState(false);
   const [mal_id, setmal_id] = useState({});
+  const [showError, setShowError] = useState(true);
 
   useEffect(()=>{
     return ()=>{
       //cleanup, warning for state update on unmounted component. Get to this later
     }
   }, [])
+
+  useEffect(()=>{
+    let res = 
+      SearchType1 === "Anime" 
+          ? animeJson.results 
+          : mangaJson.results;
+    if (searchStatus!=="presearch"&& res.length === 0)
+    {
+      setShowError(true);
+      setErrorMsg({error: "No Results", message: "Please check your spelling or searching using a more specific term"})    
+      
+    }
+  },[animeJson, mangaJson])
 
   const MangaOrAnime = () => {
     if (showAnime) {
@@ -43,17 +59,31 @@ function App() {
 }
 
   const search = (url, type) => {
+    if (showError) { setShowError(false) }
     setSearchType1(type);
     if (type === "User"){
       fetch(url)
       .then(res=>res.json())
-      .then(json=>setUserJson(json));
+      .then(json=>{
+        setUserJson(json);
+        console.log(json);
+        if (json.error) {
+          setShowError(true);
+          setErrorMsg({error:"Error! "+json.error, message: json.message})
+          console.log(json.error);
+        }
+      })
+      .catch(error=>{
+        setShowError(true);
+        debugger;
+        console.log(error);
+      });
     }
     if (type === "Anime"){
       fetch(url)
       .then(res=>res.json())
       .then(json=>{
-        //console.log(json);
+        console.log("Search json is",json);
         setAnimeJson(json);
       });
     }
@@ -65,8 +95,10 @@ function App() {
   };
   
   const renderContent = () => {
-    if (SearchType1 === "User"){
-      console.log("Here");
+    if (showError) {
+      return <Error message={errorMsg} /> 
+    }
+    else if (SearchType1 === "User"){
       return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson} showSingle={showSingle}/>
     }
     else if (SearchType1 === "Anime" || SearchType1 === "Manga") {

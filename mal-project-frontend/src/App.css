@@ -1,5 +1,13 @@
 .App {
   text-align: center;
+
+  
+  background-color: #2d2f33;
+  min-height: 100vmin;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #3B90FF;
 }
 
 .App-logo {
