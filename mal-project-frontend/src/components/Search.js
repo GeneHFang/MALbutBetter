@@ -12,14 +12,14 @@ function Search(props) {
             return searchQuery;
         }
         */
-        return searchQuery;
+        return props.query;
     } 
 
     const submission = (e) => {
         props.setSearchStatus("postsearch");
         //anime/manga search uses ID, whereas user search uses name 
         let query = parseQuery();
-        var searchURL;
+        let searchURL;
         if (searchType === "User") {
             searchURL = `https://api.jikan.moe/v3/${searchType.toLowerCase()}/${query}`;
         }
@@ -31,6 +31,11 @@ function Search(props) {
         console.log(searchURL);
         //props.searchType(searchType);
         props.search(searchURL, searchType);
+    }
+
+    const handleDropdown = (e) => {
+        console.log(e.target.innerText);
+        setSearchType(e.target.innerText);
     }
 
     return (
@@ -45,18 +50,18 @@ function Search(props) {
                         >
                             <Dropdown.Item 
                                 href="#"
-                                onClick = {(e)=>{setSearchType(e.target.innerText)}}
+                                onClick = {handleDropdown}
                                 >User</Dropdown.Item>
 
 
                             <Dropdown.Item
                                 href="#"
-                                onClick = {(e)=>{setSearchType(e.target.innerText)}}
+                                onClick = {handleDropdown}
                                 >Anime</Dropdown.Item>
 
                             <Dropdown.Item 
                                 href="#"
-                                onClick = {(e)=>{setSearchType(e.target.innerText)}}
+                                onClick = {handleDropdown}
                                 >Manga</Dropdown.Item>
 
 
@@ -64,10 +69,10 @@ function Search(props) {
                         <FormControl
                             placeholder = {`Name of ${searchType}`}
                             aria-label = "User or Title"
-                            value = {searchQuery}
+                            value = {props.query}
                             aria-describedby = "basic-addon1"
                             onChange={e => {
-                                setSearchQuery(e.target.value);
+                               props.setQuery(e.target.value);
                             }}
                             onKeyPress={e => {
                                 if (e.key === "Enter") {
