@@ -1,10 +1,11 @@
 import React, {useEffect, useState, Fragment} from 'react';
 import '../AnimePage.css'
 
-import defaultImage from '../images/backgroundtemp.jpg';
+import defaultImage from '../images/background.jpg';
 
 const AnimePage = (props) => {
     const [info, setInfo] = useState({});
+    const [readMore, setReadMore] = useState(false);
 
     useEffect(()=>{
         let searchURL = `https://api.jikan.moe/v3/anime/${props.mal_id}`;
@@ -15,6 +16,16 @@ const AnimePage = (props) => {
             setInfo(json);
         })
     },[])
+
+    const extraContent=<div>
+        <p classname= "extra content">
+            {info.synopsis} 
+        </p>
+    </div>
+
+    const linkName= readMore?'Hide Synopsis':'Read Synopsis'
+
+
     
     /*
      Results format
@@ -57,26 +68,37 @@ const AnimePage = (props) => {
     type: "TV"
     url: "https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011"
     */
-
     return(
         <div id="wrapper">
             { info.aired 
                 ? <div id="wrapper">
+                    <div class="row1">
+                            <img src={info.image_url} />
+                            <p></p>
+                            <p>{info.title}</p>
+                            <p>Status : {info.status}</p>
+                    </div>
                     <div class="bg-image">
                         <img src={info.image_url ? defaultImage : defaultImage} />
                     </div>
                     <div class="row">
-                        <div class="column">
-                            <img src={info.image_url} />
-                            <p>{info.title}</p>
-                        </div>
+                        
                         <div class="column">
                             <p>Dates Aired : {info.aired.string}</p>
                             <p>Episodes : {info.episodes}</p>
-                            <p>Score : {info.score}</p>
-                            <p>Rank : {info.rank}</p>
-                            <p>{info.synopsis}</p>
-                            URL : <a target="_blank" href={info.url}>MAL Link</a>    
+                            <div class = "row2">
+                                <div class="column2">
+                                    <p>Rank : {info.rank}</p>
+                                    <p>Score : {info.score} ({info.scored_by} votes)</p>
+                                </div>
+                                <div class="column2">
+                                    <p>Popularity : {info.popularity}</p>
+                                    <p>{info.members} members</p>
+                                </div>
+                            </div>
+                            <a className="read-more-link" onClick={()=>{setReadMore(!readMore)}} style={{color: "#737373"}}><h2>{linkName}</h2></a>
+                            {readMore && extraContent}
+                            URL : <a target="_blank" href={info.url} style={{color: "#737373"}}>MAL Link</a>    
                         </div>
                     </div>
                 </div>
