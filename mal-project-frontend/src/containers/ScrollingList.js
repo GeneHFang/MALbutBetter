@@ -17,8 +17,11 @@ const ScrollingList = (props) => {
     const [detailsPosition, setDetailsPosition] = useState({
         position: "absolute",
         border: "1px solid black",
-        backgroundColor: "white",
-        pointerEvents: "none"
+        backgroundColor: "rgba(255,255,255,.7)",
+        pointerEvents: "none",
+        borderRadius: "15px",
+        padding: "0 10px 0",
+
     });
 
     const {loading, error, animeMangas, hasMore} = useAnimeMangaSearch(page, props.animemanga.searchType ? props.animemanga.searchType.toLowerCase() : "", props.notTop);

@@ -7,7 +7,7 @@ const SearchBar = (props) => {
 
     return (
         <Fragment>
-            <Search className={"Search-bar"}  setSearchStatus={props.setSearchStatus} search={props.search} query={props.query} setQuery={props.setQuery}/>
+            <Search className={"Search-bar"}  setSearchStatus={props.setSearchStatus} search={props.search} query={props.query} setQuery={props.setQuery} type={props.type} setType={props.setType}/>
         </Fragment>
     )
 

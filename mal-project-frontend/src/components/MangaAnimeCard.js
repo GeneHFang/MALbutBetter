@@ -7,7 +7,8 @@ const MangaAnimeCard = (props) => {
         flex: "1",
         flexBasis: "25%",
         textDecoration: "none",
-        color:"inherit"
+        color:"inherit",
+        padding: "5px"
     });
 
     useEffect(()=>{

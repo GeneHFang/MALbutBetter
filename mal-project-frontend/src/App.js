@@ -29,10 +29,11 @@ function App() {
   const [showSingleAnime, setShowSingleAnime] = useState(false);
   const [mal_id, setmal_id] = useState({});
   const [showError, setShowError] = useState(true);
+  // const [searchBarStyle, setSearchBarStyle] = useState({});
 
   //form control
   const [query, setQuery] = useState("");
-  const [type, setType ] = useState("");
+  const [type, setType] = useState("User");
 
   useEffect(()=>{
     return ()=>{
@@ -65,7 +66,7 @@ function App() {
   const search = (url, type) => {
     
     console.log("Search is happening with type ", type);
-
+    // setSearchBarStyle({});
     if (showError) { setShowError(false) }
     setSearchType1(type);
     if (type === "User"){
@@ -128,6 +129,7 @@ function App() {
   }
   const showSingle = (type, mal_id) => {
     console.log("json rn ",animeJson, mangaJson);
+    // setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
     setmal_id(mal_id);
     setSearchType1("");
     setShowManga(false);
@@ -140,20 +142,33 @@ function App() {
     else {
       setShowSingleAnime(true);
     }
+  };
+
+  const goHome = () =>{
+    setSearchStatus("presearch"); 
+    setShowAnime(false); 
+    setShowManga(false); 
+    // setSearchBarStyle({})
   }
+
+
   
   return (
     <div className="App">
       {
         searchStatus !== "presearch" || showAnime || showManga
           ?
-            <div className="App-search">
+            <div className="App-search" 
+                 //style={searchBarStyle}
+            > 
               <Button variant="outline-primary" 
-                      onClick={()=>{setSearchStatus("presearch"); setShowAnime(false); setShowManga(false)}}> Home </Button>
+                      onClick={goHome}> Home </Button>
               <SearchBar setSearchStatus={setSearchStatus} 
                          search={search} 
                          query={query} 
-                         setQuery={setQuery}/>
+                         setQuery={setQuery}
+                         type={type}
+                         setType={setType}/>
             </div>
           : null
       }
@@ -174,7 +189,7 @@ function App() {
           
             {showAnime || showManga 
             ? <ScrollingList animemanga={MangaOrAnime()} mangaOrAnime={showAnime} showSingle={showSingle}/> 
-            : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} query={query} setQuery={setQuery} /*searchType={searchType}*//>}
+            : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} query={query} setQuery={setQuery} type={type} setType={setType}/>}
             
             <a
               className="App-link"

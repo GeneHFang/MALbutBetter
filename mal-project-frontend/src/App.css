@@ -6,8 +6,11 @@
   min-height: 100vmin;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: #3B90FF;
+}
+
+.error {
+  font-size: calc(10px + 2vmin);
 }
 
 .App-logo {

@@ -35,8 +35,8 @@ const MangaAnimeDetails = (props) => {
       let dateRange =  `${startDate} - ${endDate ? endDate : "Currently Airing"}`;
       return (
           <Fragment>
-          <p>Air Date {dateRange}</p>
-          <p>Number of Episodes: {episodeNum}</p>
+          Air Date {dateRange}<br/>
+          Number of Episodes: {episodeNum}
         </Fragment>
       );
     }

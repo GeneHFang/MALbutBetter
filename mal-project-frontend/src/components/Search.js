@@ -3,8 +3,8 @@ import { InputGroup, DropdownButton, Dropdown, FormControl, Form } from 'react-b
 import {Button} from 'react-bootstrap';
 
 function Search(props) {
-    const [searchType, setSearchType] = useState("User");
-    const [searchQuery, setSearchQuery] = useState("");
+    // const [searchType, setSearchType] = useState("User");
+    // const [searchQuery, setSearchQuery] = useState("");
 
     const parseQuery = () => {
         /*
@@ -20,32 +20,33 @@ function Search(props) {
         //anime/manga search uses ID, whereas user search uses name 
         let query = parseQuery();
         let searchURL;
-        if (searchType === "User") {
-            searchURL = `https://api.jikan.moe/v3/${searchType.toLowerCase()}/${query}`;
+        if (props.type === "User") {
+            searchURL = `https://api.jikan.moe/v3/${props.type.toLowerCase()}/${query}`;
         }
-        if (searchType === "Anime" || searchType === "Manga") {
-            searchURL = `https://api.jikan.moe/v3/search/${searchType.toLowerCase()}?q=${query}&page=1`;
+        if (props.type === "Anime" || props.type === "Manga") {
+            searchURL = `https://api.jikan.moe/v3/search/${props.type.toLowerCase()}?q=${query}&page=1`;
         }
         
 
-        console.log(searchURL);
+        console.log("This is the ",props.type);
         //props.searchType(searchType);
-        props.search(searchURL, searchType);
+        props.search(searchURL, props.type);
     }
 
     const handleDropdown = (e) => {
         console.log(e.target.innerText);
-        setSearchType(e.target.innerText);
+        props.setType(e.target.innerText);
+        // setSearchType(e.target.innerText);
     }
 
     return (
         <div className={props.className}> 
                     <InputGroup>
                         <DropdownButton
-                        
+
                             as = {InputGroup.Prepend}
                             variant = "outline-secondary"
-                            title = {`Search ${searchType}`}
+                            title = {`Search ${props.type}`}
                             id = "input-group-dropdown"
                         >
                             <Dropdown.Item 
@@ -67,7 +68,7 @@ function Search(props) {
 
                         </DropdownButton>
                         <FormControl
-                            placeholder = {`Name of ${searchType}`}
+                            placeholder = {`Name of ${props.type}`}
                             aria-label = "User or Title"
                             value = {props.query}
                             aria-describedby = "basic-addon1"

@@ -1,4 +1,6 @@
 import React, {useEffect, useState, Fragment} from 'react';
+import {ReadMore} from 'react-read-more-less';
+import ReadMoreAndLess from 'react-read-more-less';
 import '../AnimePage.css'
 
 import defaultImage from '../images/background.jpg';
@@ -17,15 +19,9 @@ const AnimePage = (props) => {
         })
     },[])
 
-    const extraContent=<div>
-        <p classname= "extra content">
-            {info.synopsis} 
-        </p>
-    </div>
-
-    const linkName= readMore?'Hide Synopsis':'Read Synopsis'
 
 
+    
     
     /*
      Results format
@@ -72,32 +68,37 @@ const AnimePage = (props) => {
         <div id="wrapper">
             { info.aired 
                 ? <div id="wrapper">
-                    <div class="row1">
+                    <div className="row1">
                             <img src={info.image_url} />
                             <p></p>
                             <p>{info.title}</p>
                             <p>Status : {info.status}</p>
                     </div>
-                    <div class="bg-image">
+                    <div className="bg-image">
                         <img src={info.image_url ? defaultImage : defaultImage} />
                     </div>
-                    <div class="row">
+                    <div className="row">
                         
-                        <div class="column">
+                        <div className="column">
                             <p>Dates Aired : {info.aired.string}</p>
                             <p>Episodes : {info.episodes}</p>
                             <div class = "row2">
-                                <div class="column2">
+                                <div className="column2">
                                     <p>Rank : {info.rank}</p>
                                     <p>Score : {info.score} ({info.scored_by} votes)</p>
                                 </div>
-                                <div class="column2">
+                                <div className="column2">
                                     <p>Popularity : {info.popularity}</p>
                                     <p>{info.members} members</p>
                                 </div>
                             </div>
-                            <a className="read-more-link" onClick={()=>{setReadMore(!readMore)}} style={{color: "#737373"}}><h2>{linkName}</h2></a>
-                            {readMore && extraContent}
+                            <ReadMoreAndLess
+                                className="extra content"
+                                charLimit={250}
+                                readMoreText=" read more"
+                                readLessText=" read less">
+                                {info.synopsis}
+                            </ReadMoreAndLess>
                             URL : <a target="_blank" href={info.url} style={{color: "#737373"}}>MAL Link</a>    
                         </div>
                     </div>
