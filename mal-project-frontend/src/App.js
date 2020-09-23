@@ -30,6 +30,10 @@ function App() {
   const [mal_id, setmal_id] = useState({});
   const [showError, setShowError] = useState(true);
 
+  //form control
+  const [query, setQuery] = useState("");
+  const [type, setType ] = useState("");
+
   useEffect(()=>{
     return ()=>{
       //cleanup, warning for state update on unmounted component. Get to this later
@@ -59,6 +63,9 @@ function App() {
 }
 
   const search = (url, type) => {
+    
+    console.log("Search is happening with type ", type);
+
     if (showError) { setShowError(false) }
     setSearchType1(type);
     if (type === "User"){
@@ -75,28 +82,33 @@ function App() {
       })
       .catch(error=>{
         setShowError(true);
-        debugger;
-        console.log(error);
+        let message = "";
+        if (error.message === "Failed to fetch"){
+          message = "Unable to find user!"
+        }
+        setErrorMsg({error:"Error! "+ message});
+        console.log(error.message);
       });
     }
     if (type === "Anime"){
       fetch(url)
       .then(res=>res.json())
       .then(json=>{
-        console.log("Search json is",json);
         setAnimeJson(json);
       });
     }
     if (type === "Manga"){
       fetch(url)
       .then(res=>res.json())
-      .then(json=>setMangaJson(json));
+      .then(json=>{
+        setMangaJson(json)
+      });
     }
   };
   
   const renderContent = () => {
     if (showError) {
-      return <Error message={errorMsg} /> 
+      return <Error message={errorMsg.error ? errorMsg : {message:"renderContent Error"}} /> 
     }
     else if (SearchType1 === "User"){
       return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson} showSingle={showSingle}/>
@@ -115,12 +127,14 @@ function App() {
     }
   }
   const showSingle = (type, mal_id) => {
+    console.log("json rn ",animeJson, mangaJson);
     setmal_id(mal_id);
     setSearchType1("");
     setShowManga(false);
     setShowAnime(false);
+    setShowError(false);
     setSearchStatus("notpresearch");
-    if (type==="manga") {
+    if (type==="Manga") {
       setShowSingleManga(true);
     } 
     else {
@@ -134,7 +148,12 @@ function App() {
         searchStatus !== "presearch" || showAnime || showManga
           ?
             <div className="App-search">
-              <Button variant="outline-primary"  onClick={()=>{setSearchStatus("presearch"); setShowAnime(false); setShowManga(false)}}> Home </Button> <SearchBar setSearchStatus={setSearchStatus} search={search}/>
+              <Button variant="outline-primary" 
+                      onClick={()=>{setSearchStatus("presearch"); setShowAnime(false); setShowManga(false)}}> Home </Button>
+              <SearchBar setSearchStatus={setSearchStatus} 
+                         search={search} 
+                         query={query} 
+                         setQuery={setQuery}/>
             </div>
           : null
       }
@@ -155,7 +174,7 @@ function App() {
           
             {showAnime || showManga 
             ? <ScrollingList animemanga={MangaOrAnime()} mangaOrAnime={showAnime} showSingle={showSingle}/> 
-            : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} /*searchType={searchType}*//>}
+            : <Search className="Search-bar" setSearchStatus={setSearchStatus} search={search} query={query} setQuery={setQuery} /*searchType={searchType}*//>}
             
             <a
               className="App-link"
