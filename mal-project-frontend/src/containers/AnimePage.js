@@ -4,6 +4,7 @@ import ReadMoreAndLess from 'react-read-more-less';
 import '../AnimePage.css'
 
 import defaultImage from '../images/background.jpg';
+import titleholderImage from '../images/Title Card Holder.png';
 
 const AnimePage = (props) => {
     const [info, setInfo] = useState({});
@@ -63,11 +64,7 @@ const AnimePage = (props) => {
     trailer_url: "https://www.youtube.com/embed/D9iTQRB4XRk?enablejsapi=1&wmode=opaque&autoplay=1"
     type: "TV"
     url: "https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011"
-    */
-    return(
-        <div id="wrapper">
-            { info.aired 
-                ? <div id="wrapper">
+
                     <div className="row1">
                             <img src={info.image_url} />
                             <p></p>
@@ -100,6 +97,47 @@ const AnimePage = (props) => {
                                 {info.synopsis}
                             </ReadMoreAndLess>
                             URL : <a target="_blank" href={info.url} style={{color: "#737373"}}>MAL Link</a>    
+                        </div>
+                    </div>
+
+    */
+    return(
+        <div id="wrapper">
+            { info.aired 
+                ? <div id="wrapper">
+                    <div className="bg-image" style={{backgroundImage: 'url(' + require('../images/background.jpg') + ')'}}></div>
+                    <div className="Title-Area">
+                        <img src= {titleholderImage} className="title-bg"/>
+                        <div className="row">
+                            <div className="Rank">
+                                <p>Rank : {info.rank}</p>
+                                <p>Score : {info.score}</p>
+                                <p>({info.scored_by} votes)</p>
+                            </div>
+                            <div className="Title-Content">
+                                <img src={info.image_url} className="title-card"/>
+                                <p>{info.title}</p>
+                            </div>
+                            <div className="Popularity">
+                                <p>Popularity : {info.popularity}</p>
+                                <p>{info.members} Members</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="Synopsis-Area">
+                        <div className="synopsis-container">
+                            <div className="random-stylebox">
+                                <div className="synopsis">
+                                    <p className="header">Synopsis</p>
+                                    <ReadMoreAndLess
+                                        className="extra content"
+                                        charLimit={250}
+                                        readMoreText=" read more"
+                                        readLessText=" read less">
+                                        {info.synopsis}
+                                    </ReadMoreAndLess>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
