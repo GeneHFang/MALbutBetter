@@ -29,7 +29,7 @@ function App() {
   const [showSingleAnime, setShowSingleAnime] = useState(false);
   const [mal_id, setmal_id] = useState({});
   const [showError, setShowError] = useState(true);
-  // const [searchBarStyle, setSearchBarStyle] = useState({});
+  const [searchBarStyle, setSearchBarStyle] = useState({});
 
   //form control
   const [query, setQuery] = useState("");
@@ -66,7 +66,7 @@ function App() {
   const search = (url, type) => {
     
     console.log("Search is happening with type ", type);
-    // setSearchBarStyle({});
+    setSearchBarStyle({});
     if (showError) { setShowError(false) }
     setSearchType1(type);
     if (type === "User"){
@@ -129,7 +129,7 @@ function App() {
   }
   const showSingle = (type, mal_id) => {
     console.log("json rn ",animeJson, mangaJson);
-    // setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
+    setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
     setmal_id(mal_id);
     setSearchType1("");
     setShowManga(false);
@@ -148,7 +148,7 @@ function App() {
     setSearchStatus("presearch"); 
     setShowAnime(false); 
     setShowManga(false); 
-    // setSearchBarStyle({})
+    setSearchBarStyle({})
   }
 
 
@@ -159,7 +159,7 @@ function App() {
         searchStatus !== "presearch" || showAnime || showManga
           ?
             <div className="App-search" 
-                 //style={searchBarStyle}
+                 style={searchBarStyle}
             > 
               <Button variant="outline-primary" 
                       onClick={goHome}> Home </Button>
