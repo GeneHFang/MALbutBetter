@@ -44,7 +44,7 @@ const MangaAnimeCard = (props) => {
     }
 
     const handleClick = () => {
-        props.showSingle(props.type, props.mal_id);
+        props.showSingle(props.mal_id);
     }
 
     //before mouseMove (onMouseOver={(e)=>props.displayDetails(true, props.name)})

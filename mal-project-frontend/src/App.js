@@ -127,8 +127,8 @@ function App() {
       return <MangaPage mal_id={mal_id}/>
     }
   }
-  const showSingle = (type, mal_id) => {
-    console.log("json rn ",animeJson, mangaJson);
+  const showSingle = (mal_id) => {
+    console.log("json rn ",animeJson, mangaJson, " and type", type);
     setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
     setmal_id(mal_id);
     setSearchType1("");
