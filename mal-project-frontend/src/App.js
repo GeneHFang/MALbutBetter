@@ -52,7 +52,8 @@ function App() {
       setErrorMsg({error: "No Results", message: "Please check your spelling or searching using a more specific term"})    
       
     }
-  },[animeJson, mangaJson])
+  },[animeJson, mangaJson]);
+
 
   const MangaOrAnime = () => {
     if (showAnime) {
@@ -61,11 +62,12 @@ function App() {
     else if (showManga) {
       return { searchType:"Manga"};
     }
-}
+  }
+
+
 
   const search = (url, type) => {
-    
-    console.log("Search is happening with type ", type);
+    if (type !== "User") { setUserJson({}); }
     setSearchBarStyle({});
     if (showError) { setShowError(false) }
     setSearchType1(type);
@@ -132,6 +134,7 @@ function App() {
     setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
     setmal_id(mal_id);
     setSearchType1("");
+    setUserJson({});
     setShowManga(false);
     setShowAnime(false);
     setShowError(false);
@@ -149,6 +152,7 @@ function App() {
     setShowAnime(false); 
     setShowManga(false); 
     setSearchBarStyle({})
+    setUserJson({});
   }
 
 

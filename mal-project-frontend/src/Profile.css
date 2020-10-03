@@ -1,12 +1,22 @@
 .profile {
     background-color: #2d2f33;
-    flex-direction: column;
+    /* flex-direction: column; */
     color: #3B90FF;
+    
+    align-items: center;
+    margin-top: 1%;
 }
+
 
 .profile-tabs{
     background-color: #2d2f33;
     color: #3B90FF;
+}
+
+.profile-tabs-p{
+    flex:33%;
+    margin: 2%;
+    padding: 2%;
 }
 
 .Scroll{

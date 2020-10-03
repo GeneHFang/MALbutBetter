@@ -148,4 +148,4 @@ const AnimePage = (props) => {
     );
 }
 
-export default AnimePage
+export default AnimePage;
