@@ -33,6 +33,19 @@ const Profile = (props) => {
     const [animeListType, setAnimeListType] = useState("favorites");
     const [mangaListType, setMangaListType] = useState("favorites");
 
+    const [watching, setWatching] = useState([]);
+    const [reading, setReading] = useState([]);
+    const [completedAnime, setCompletedAnime] = useState([]);
+    const [completedManga, setCompletedManga] = useState([]);
+    const [heldAnime, setHeldAnime] = useState([]);
+    const [heldManga, setHeldManga] = useState([]);
+    const [droppedAnime, setDroppedAnime] = useState([]);
+    const [droppedManga, setDroppedManga] = useState([]);
+    const [ptw, setPtw] = useState([]);
+    const [ptr, setPtr] = useState([]);
+    const [favesAnime, setFavesAnime] = useState([]);
+    const [favesManga, setFavesManga] = useState([]);
+
 
 
     const [jsonArray, setJsonArray] = useState([]); 
@@ -127,6 +140,109 @@ const Profile = (props) => {
         "plantoread" : "Plan to Read"
     };
 
+    useEffect(()=>{
+        let username = props.userJson.username;
+        let mangaTags = ["favorites", "reading", "dropped", "completed", "onhold", "plantoread"];
+        let animeTags = ["favorites", "watching", "dropped", "completed", "onhold", "plantowatch"];
+        let url = "";
+        
+        mangaTags.forEach((tag)=>{
+            if (tag !== "favorites"){
+
+                url = `https://api.jikan.moe/v3/user/${username}/mangalist/${tag}`;
+                
+                fetch(url)
+                .then(res => res.json())
+                .then(json => {
+                        switch(tag){
+                            case "reading":
+                                setReading(json.manga);
+                                break;
+                            case "dropped":
+                                setDroppedManga(json.manga);
+                                break;
+                            case "completed":
+                                setCompletedManga(json.manga);
+                                break;
+                            case "onhold":
+                                setHeldManga(json.manga);
+                                break;
+                            case "plantoread":
+                                setPtr(json.manga);
+                                break;
+                        }
+                    })
+                    
+            }
+            else {
+                url = `https://api.jikan.moe/v3/user/${username}`;
+                fetch(url)
+                .then(res => res.json())
+                .then(json => {
+                    setFavesManga(json.favorites.manga);
+                });
+            }
+        });
+        
+        animeTags.forEach((tag)=>{
+            if (tag !== "favorites"){
+
+                url = `https://api.jikan.moe/v3/user/${username}/animelist/${tag}`;
+                
+                fetch(url)
+                .then(res => res.json())
+                .then(json => {
+                        switch(tag){
+                            case "watching":
+                                setWatching(json.anime);
+                                break;
+                            case "dropped":
+                                setDroppedAnime(json.anime);
+                                break;
+                            case "completed":
+                                setCompletedAnime(json.anime);
+                                break;
+                            case "onhold":
+                                setHeldAnime(json.anime);
+                                break;
+                            case "plantowatch":
+                                setPtw(json.anime);
+                                break;
+                        }
+                    })
+                    
+            }
+            else {
+                url = `https://api.jikan.moe/v3/user/${username}`;
+                fetch(url)
+                .then(res => res.json())
+                .then(json => {
+                    setFavesAnime(json.favorites.anime);
+                });
+            }
+        });
+        
+
+
+
+    }, [props.userJson.username])
+
+    const logState = ()=> {
+        console.log("\nwatching: ",watching,
+            "\nreading: ",reading,
+            "\ncompleteA: ",completedAnime,
+            "\ncompleteM: ",completedManga,
+            "\nheldA: ",heldAnime,
+            "\nheldM: ",heldManga,
+            "\ndroppedA: ",droppedAnime,
+            "\ndroppedM: ",droppedManga,
+            "\npw: ", ptw,
+            "\npr: ",ptr,
+            "\nfA: ",favesAnime,
+            "\nfM: ",favesManga,
+            );
+    }
+
     const renderList = () =>{
         if (showStats){
             return <UserStats/>
@@ -143,6 +259,7 @@ const Profile = (props) => {
         <div className="profile" style={{display:"flex"}}>
             <div style={{flex:"50%"}}><img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} /></div>
             {props.userJson.about ?  <p className="profile-about" style={{flex:"50%"}}>{props.userJson.about}</p> : <p>Bio Placeholder</p>}
+            <button onClick={logState} />
         </div>
         <div>
             <div className="profile-tabs" style={{display:"flex"}}>
