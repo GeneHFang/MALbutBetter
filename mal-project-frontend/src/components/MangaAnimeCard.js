@@ -11,6 +11,20 @@ const MangaAnimeCard = (props) => {
         padding: "5px"
     });
 
+    //window size check
+    const [width, setWidth] = React.useState(window.innerWidth);
+    const [height, setHeight] = React.useState(window.innerHeight);
+
+    const updateWidthAndHeight = () => {
+            setWidth(window.innerWidth);
+            setHeight(window.innerHeight);
+    };
+
+    React.useEffect(() => {
+        window.addEventListener("resize", updateWidthAndHeight);
+        return () => window.removeEventListener("resize", updateWidthAndHeight);
+    });
+
     useEffect(()=>{
         
         return ()=>clearTimeout(timer);
@@ -59,11 +73,22 @@ const MangaAnimeCard = (props) => {
                 onClick={handleClick}
                 ref={props.refCallback}
                 >
-                    <img style={{width:"200px", height:"300px", pointerEvents:"none"}} src={props.img}/><br/>
-                    {props.rank ? <Fragment>Rank: {props.rank}<br/></Fragment> : null }
-                    {props.name}<br/>
-                    {/* ID : {props.number}<br/> */}
-                    {/* Anime/Manga card  */}
+                    { width >= 1100 
+                        ? <div>
+                        <img style={{width:"200px", height:"300px", pointerEvents:"none"}} src={props.img}/><br/>
+                        {props.rank ? <Fragment>Rank: {props.rank}<br/></Fragment> : null }
+                        {props.name}<br/>
+                        {/* ID : {props.number}<br/> */}
+                        {/* Anime/Manga card  */}
+                        </div>
+                        : <div>
+                        <img style={{width:"100px", height:"150px", pointerEvents:"none"}} src={props.img}/><br/>
+                        {props.rank ? <Fragment>Rank: {props.rank}<br/></Fragment> : null }
+                        {props.name}<br/>
+                        {/* ID : {props.number}<br/> */}
+                        {/* Anime/Manga card  */}
+                        </div>
+                    }
                     
             </div>
         // </a>

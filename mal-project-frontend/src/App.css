@@ -34,6 +34,7 @@
   font-size: calc(10px + 2vmin);
   color: #3B90FF;
   width: 100%;
+  z-index: 2;
 }
 
 .App-header {
