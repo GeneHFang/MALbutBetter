@@ -4,11 +4,18 @@ import ReadMoreAndLess from 'react-read-more-less';
 import '../AnimePage.css'
 
 import defaultImage from '../images/background.jpg';
-import titleholderImage from '../images/Title Card Holder.png';
+import titleholderImage from '../images/Title Card Holder1.png';
 
 const AnimePage = (props) => {
     const [info, setInfo] = useState({});
     const [readMore, setReadMore] = useState(false);
+    const [width, setWidth] = React.useState(window.innerWidth);
+    const [height, setHeight] = React.useState(window.innerHeight);
+
+    const updateWidthAndHeight = () => {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+    };
 
     useEffect(()=>{
         let searchURL = `https://api.jikan.moe/v3/anime/${props.mal_id}`;
@@ -20,93 +27,21 @@ const AnimePage = (props) => {
         })
     },[])
 
+    React.useEffect(() => {
+        window.addEventListener("resize", updateWidthAndHeight);
+        return () => window.removeEventListener("resize", updateWidthAndHeight);
+    });
 
-
-    
-    
-    /*
-     Results format
-     
-    {request_hash: "request:anime:e09f711f9e532dc4ffb4d5649b5dbd6e0fb25648", request_cached: true, request_cache_expiry: 275217, mal_id: 11061, url: "https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011", …}
-    aired: {from: "2011-10-02T00:00:00+00:00", to: "2014-09-24T00:00:00+00:00", prop: {…}, string: "Oct 2, 2011 to Sep 24, 2014"}
-    airing: false
-    background: null
-    broadcast: "Sundays at 10:55 (JST)"
-    duration: "23 min per ep"
-    ending_themes: (9) ["#1: "Just Awake" by Fear, and Loathing in Las Vegas (eps 1-26)", "#2: "HUNTING FOR YOUR DREAM" by Galneryus (eps 27-50, 52-58)", "#3: "Riot" by Yoshihisa Hirano (ep 51)", "#4: "REASON" by YUZU (ゆず) (eps 59-75, 147)", "#5: "Nagareboshi Kirari (YUZU Version) (流れ星キラリ (ゆずバージョン))" by YUZU (ゆず) (eps 76-98)", "#6: "Hyouriittai (表裏一体)" by YUZU (ゆず) (eps 99-134, 136)", "#7: "Understanding" by Yoshihisa Hirano (ep 135)", "#8: "Hyouriittai -second version- (表裏一体)" by YUZU (ゆず) (eps 137-146)", "#9: "departure!" by Ono Masatoshi (ep 148)"]
-    episodes: 148
-    favorites: 122566
-    genres: (5) [{…}, {…}, {…}, {…}, {…}]
-    image_url: "https://cdn.myanimelist.net/images/anime/11/33657.jpg"
-    licensors: [{…}]
-    mal_id: 11061
-    members: 1365014
-    opening_themes: (3) ["#1: "departure!" by Ono Masatoshi (eps 1-26, 50-52, 62-75, 137-147)", "#2: "departure! -second version-" by Ono Masatoshi (eps 27-49, 76-103, 109-134, 136)", "#3: "departure! -Opening Tokubetsu-hen-" by Ono Masatoshi (eps 53-61, 104-108)"]
-    popularity: 15
-    premiered: "Fall 2011"
-    producers: (3) [{…}, {…}, {…}]
-    rank: 3
-    rating: "PG-13 - Teens 13 or older"
-    related: {Adaptation: Array(1), Alternative version: Array(4), Side story: Array(2)}
-    request_cache_expiry: 275217
-    request_cached: true
-    request_hash: "request:anime:e09f711f9e532dc4ffb4d5649b5dbd6e0fb25648"
-    score: 9.12
-    scored_by: 775381
-    source: "Manga"
-    status: "Finished Airing"
-    studios: [{…}]
-    synopsis: "Hunter x Hunter is set in a world where Hunters exist to perform all manner of dangerous tasks like capturing criminals and bravely searching for lost treasures in uncharted territories. Twelve-year-old Gon Freecss is determined to become the best Hunter possible in hopes of finding his father, who was a Hunter himself and had long ago abandoned his young son. However, Gon soon realizes the path to achieving his goals is far more challenging than he could have ever imagined. Along the way to becoming an official Hunter, Gon befriends the lively doctor-in-training Leorio, vengeful Kurapika, and rebellious ex-assassin Killua. To attain their own goals and desires, together the four of them take the Hunter Exam, notorious for its low success rate and high probability of death. Throughout their journey, Gon and his friends embark on an adventure that puts them through many hardships and struggles. They will meet a plethora of monsters, creatures, and characters—all while learning what being a Hunter truly means. [Written by MAL Rewrite]"
-    title: "Hunter x Hunter (2011)"
-    title_english: "Hunter x Hunter"
-    title_japanese: "HUNTER×HUNTER（ハンター×ハンター）"
-    title_synonyms: ["HxH (2011)"]
-    trailer_url: "https://www.youtube.com/embed/D9iTQRB4XRk?enablejsapi=1&wmode=opaque&autoplay=1"
-    type: "TV"
-    url: "https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011"
-
-                    <div className="row1">
-                            <img src={info.image_url} />
-                            <p></p>
-                            <p>{info.title}</p>
-                            <p>Status : {info.status}</p>
-                    </div>
-                    <div className="bg-image">
-                        <img src={info.image_url ? defaultImage : defaultImage} />
-                    </div>
-                    <div className="row">
-                        
-                        <div className="column">
-                            <p>Dates Aired : {info.aired.string}</p>
-                            <p>Episodes : {info.episodes}</p>
-                            <div class = "row2">
-                                <div className="column2">
-                                    <p>Rank : {info.rank}</p>
-                                    <p>Score : {info.score} ({info.scored_by} votes)</p>
-                                </div>
-                                <div className="column2">
-                                    <p>Popularity : {info.popularity}</p>
-                                    <p>{info.members} members</p>
-                                </div>
-                            </div>
-                            <ReadMoreAndLess
-                                className="extra content"
-                                charLimit={250}
-                                readMoreText=" read more"
-                                readLessText=" read less">
-                                {info.synopsis}
-                            </ReadMoreAndLess>
-                            URL : <a target="_blank" href={info.url} style={{color: "#737373"}}>MAL Link</a>    
-                        </div>
-                    </div>
-
-    */
     return(
         <div id="wrapper">
             { info.aired 
-                ? <div id="wrapper">
-                    <div className="bg-image" style={{backgroundImage: 'url(' + require('../images/background.jpg') + ')'}}></div>
-                    <div className="Title-Area">
+                ? (width >= 1100
+                    ? <div id="wrapper">
+                    <div>
+                        <div>{`Window width = ${width}`}</div>
+                        <div>{`Window height = ${height}`}</div>
+                    </div> 
+                    <div className="Content-Area">
                         <img src= {titleholderImage} className="title-bg"/>
                         <div className="row">
                             <div className="Rank">
@@ -123,8 +58,7 @@ const AnimePage = (props) => {
                                 <p>{info.members} Members</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="Synopsis-Area">
+                        <div className="Synopsis-Area">
                         <div className="synopsis-container">
                             <div className="random-stylebox">
                                 <div className="synopsis">
@@ -140,7 +74,16 @@ const AnimePage = (props) => {
                             </div>
                         </div>
                     </div>
+
+                    </div>
                 </div>
+                    : <div id="wrapper">
+                        <div>
+                            <div>{`Window width = ${width}`}</div>
+                            <div>{`Window height = ${height}`}</div>
+                        </div>
+                    </div>  //change this to thinner       
+                )
                 :
                 null    
             }
