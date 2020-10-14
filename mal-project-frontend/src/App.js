@@ -29,7 +29,7 @@ function App() {
   const [showSingleAnime, setShowSingleAnime] = useState(false);
   const [mal_id, setmal_id] = useState({});
   const [showError, setShowError] = useState(true);
-  // const [searchBarStyle, setSearchBarStyle] = useState({});
+  const [searchBarStyle, setSearchBarStyle] = useState({});
 
   //form control
   const [query, setQuery] = useState("");
@@ -52,7 +52,8 @@ function App() {
       setErrorMsg({error: "No Results", message: "Please check your spelling or searching using a more specific term"})    
       
     }
-  },[animeJson, mangaJson])
+  },[animeJson, mangaJson]);
+
 
   const MangaOrAnime = () => {
     if (showAnime) {
@@ -61,12 +62,13 @@ function App() {
     else if (showManga) {
       return { searchType:"Manga"};
     }
-}
+  }
+
+
 
   const search = (url, type) => {
-    
-    console.log("Search is happening with type ", type);
-    // setSearchBarStyle({});
+    if (type !== "User") { setUserJson({}); }
+    setSearchBarStyle({});
     if (showError) { setShowError(false) }
     setSearchType1(type);
     if (type === "User"){
@@ -127,11 +129,12 @@ function App() {
       return <MangaPage mal_id={mal_id}/>
     }
   }
-  const showSingle = (type, mal_id) => {
-    console.log("json rn ",animeJson, mangaJson);
-    // setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
+  const showSingle = (mal_id) => {
+    console.log("json rn ",animeJson, mangaJson, " and type", type);
+    setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
     setmal_id(mal_id);
     setSearchType1("");
+    setUserJson({});
     setShowManga(false);
     setShowAnime(false);
     setShowError(false);
@@ -148,7 +151,8 @@ function App() {
     setSearchStatus("presearch"); 
     setShowAnime(false); 
     setShowManga(false); 
-    // setSearchBarStyle({})
+    setSearchBarStyle({})
+    setUserJson({});
   }
 
 
@@ -159,7 +163,7 @@ function App() {
         searchStatus !== "presearch" || showAnime || showManga
           ?
             <div className="App-search" 
-                 //style={searchBarStyle}
+                 style={searchBarStyle}
             > 
               <Button variant="outline-primary" 
                       onClick={goHome}> Home </Button>

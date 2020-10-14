@@ -74,6 +74,7 @@ const AnimePage = (props) => {
                             </div>
                         </div>
                     </div>
+
                     </div>
                 </div>
                     : <div id="wrapper">
@@ -90,4 +91,4 @@ const AnimePage = (props) => {
     );
 }
 
-export default AnimePage
+export default AnimePage;

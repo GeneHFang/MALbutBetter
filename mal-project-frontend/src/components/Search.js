@@ -17,6 +17,7 @@ function Search(props) {
 
     const submission = (e) => {
         props.setSearchStatus("postsearch");
+        console.log("This is props type",props.type)
         //anime/manga search uses ID, whereas user search uses name 
         let query = parseQuery();
         let searchURL;
@@ -28,13 +29,13 @@ function Search(props) {
         }
         
 
-        console.log("This is the ",props.type);
+        console.log("This is the ",searchURL);
         //props.searchType(searchType);
         props.search(searchURL, props.type);
     }
 
     const handleDropdown = (e) => {
-        console.log(e.target.innerText);
+        // console.log(e.target.innerText);
         props.setType(e.target.innerText);
         // setSearchType(e.target.innerText);
     }
