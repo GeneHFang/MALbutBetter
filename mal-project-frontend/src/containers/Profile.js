@@ -33,6 +33,12 @@ const Profile = (props) => {
     const [animeListType, setAnimeListType] = useState("favorites");
     const [mangaListType, setMangaListType] = useState("favorites");
 
+
+    //Section Stats
+    const [averageScore, setAverageScore] = useState(-1);
+    const [totalConsumed, setTotalConsumed] = useState(-1);
+    // const [totalExists, setTotalExists] = useState(-1);
+
     // const [watching, setWatching] = useState([]);
     // const [reading, setReading] = useState([]);
     // const [completedAnime, setCompletedAnime] = useState([]);
@@ -66,13 +72,57 @@ const Profile = (props) => {
 
     const fetchList = async (username, type, args) => {
         setJsonArray([]);
-        let url = `https://api.jikan.moe/v3/user/${username}/${type}list/${args}`;
+        let pageNum = 1; 
+        let url = `https://api.jikan.moe/v3/user/${username}/${type}list/${args}/${pageNum}`;
         const response = await fetch(url);
         const json = await response.json();
         let arr = [];
+        //avg score
+        let totalScore = 0;
+        let totalNoVotes = 0;
+        //total ep/chapters
+        let airingOrPublishing = -1;
+        let totalConsumed = 0;
+        let totalExists = 0;
+
         json[type].forEach((animemanga)=>{
             arr.push(animemanga);
+            totalScore += animemanga.score;
+            if(!animemanga.score) {totalNoVotes++;}
+
+            airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
+            if (airingOrPublishing === 2) {//no longer airing or publishing
+                totalConsumed += animemanga.watched_episodes ? animemanga.watched_episodes : animemanga.read_chapters;
+                totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
+            }
         });
+        console.log("Size of array: ", arr.length);
+
+        while(arr.length && arr.length%300===0){
+            pageNum++;
+            url = `https://api.jikan.moe/v3/user/${username}/${type}list/${args}/${pageNum}`;
+            const response = await fetch(url);
+            const json = await response.json();
+            json[type].forEach((animemanga)=>{
+                arr.push(animemanga);
+                totalScore += animemanga.score;
+                if(!animemanga.score) {totalNoVotes++;}
+                
+                airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
+                if (airingOrPublishing === 2) {//no longer airing or publishing
+                    totalConsumed += animemanga.watched_episodes ? animemanga.watched_episodes : animemanga.read_chapters;
+                    totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
+                }
+            });
+            
+            console.log("Size of array: ", arr.length);
+        }
+        totalScore = Math.round(((totalScore / (arr.length-totalNoVotes))+Number.EPSILON)*100)/100;
+        setAverageScore(totalScore ? totalScore : 0);
+
+        totalConsumed = Math.round(((totalConsumed / totalExists)+Number.EPSILON)*100)/100;
+        setTotalConsumed(totalConsumed ? totalConsumed : -1);
+
         setJsonArray(arr);
         // console.log(json.anime.length);
 
@@ -159,34 +209,28 @@ const Profile = (props) => {
     // }
 
     const stats = () =>{
-        let type = "Anime";
-        let parts = "Episodes";
-        let verb = "watched";
-        let presentTense = "watch";
-        let jsonKey = "anime_stats";
-        if (showManga){ 
-            type = "Manga";
-            parts = "Chapters";
-            verb = "read";
-            presentTense = "read";
-            jsonKey = "manga_stats";
-        }
-        if (props.userJson.anime_stats){
-            return <div className="stats">
-                {type} Completed : {props.userJson[jsonKey].completed}<br/>
-                {type} Dropped : {props.userJson[jsonKey].dropped}<br/>
-                {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]} <br/>
-                {showManga ?<span> Volumes {verb} : {props.userJson[jsonKey][`volumes_${verb}`]} <br/></span> : null}
-                {type} On Hold : {props.userJson[jsonKey].on_hold}<br/>
-                {type} Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}<br/>
-                {type} Re{verb} : {props.userJson[jsonKey][`re${verb}`]}<br/>
-                {type} Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}<br/>
-                Average Score Given : {props.userJson[jsonKey].mean_score}<br/>
-            </div>
-        }
-        else {
-            return null;
-        }
+        let type = showAnime ? "Anime" : "Manga";
+        let parts = showAnime ? "Episodes" : "Chapters";
+        let verb = showAnime ? "watched" : "read";
+        let presentTense = showAnime ? "watch" : "read";
+        let jsonKey = showAnime ? "anime_stats" : "manga_stats";
+
+        return ( props.userJson[jsonKey] 
+            ?
+                <div className="stats">
+                    {type} Completed : {props.userJson[jsonKey].completed}<br/>
+                    {type} Dropped : {props.userJson[jsonKey].dropped}<br/>
+                    {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]} <br/>
+                    {showManga ?<span> Volumes {verb} : {props.userJson[jsonKey][`volumes_${verb}`]} <br/></span> : null}
+                    {type} On Hold : {props.userJson[jsonKey].on_hold}<br/>
+                    {type} Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}<br/>
+                    {type} Re{verb} : {props.userJson[jsonKey][`re${verb}`]}<br/>
+                    {type} Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}<br/>
+                    Average Score Given : {props.userJson[jsonKey].mean_score}<br/>
+                </div>
+            :
+                null
+        );
         
     }
 
@@ -198,6 +242,19 @@ const Profile = (props) => {
         return <ScrollingList animemanga={jsonArray} notTop={true} profile={true} showSingle={props.showSingle}/>
         // }
     };
+
+    const specificStats = () => {
+        let listType = showAnime ? ListType[animeListType] : ListType[mangaListType];
+        let showAverage = true;
+        let showConsumed = true;
+        if (listType === 'Favorites' || listType.substr(0,4) === 'Plan' || averageScore === 0) showAverage=false;
+        return (
+            <div className="stats">
+                {showAverage && `Average Score for ${listType}: ${averageScore}`}
+                {showConsumed && `Completion percent : ${totalConsumed}`}
+            </div>
+        )
+    }
 
 
     return(
@@ -230,6 +287,7 @@ const Profile = (props) => {
                 :
                     null
             }
+            {specificStats()}
             {renderList()}
         </div>
         </Fragment>
