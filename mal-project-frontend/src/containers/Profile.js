@@ -18,7 +18,7 @@ const Profile = (props) => {
 
     const [img, setImg] = useState("");
     const [bio, setBio] = useState("");
-    const [showStats, setShowStats] = useState(false);
+    // const [showStats, setShowStats] = useState(false);
     const [showManga, setShowManga] = useState(false);
     const [showAnime, setShowAnime] = useState(true);
 
@@ -33,18 +33,18 @@ const Profile = (props) => {
     const [animeListType, setAnimeListType] = useState("favorites");
     const [mangaListType, setMangaListType] = useState("favorites");
 
-    const [watching, setWatching] = useState([]);
-    const [reading, setReading] = useState([]);
-    const [completedAnime, setCompletedAnime] = useState([]);
-    const [completedManga, setCompletedManga] = useState([]);
-    const [heldAnime, setHeldAnime] = useState([]);
-    const [heldManga, setHeldManga] = useState([]);
-    const [droppedAnime, setDroppedAnime] = useState([]);
-    const [droppedManga, setDroppedManga] = useState([]);
-    const [ptw, setPtw] = useState([]);
-    const [ptr, setPtr] = useState([]);
-    const [favesAnime, setFavesAnime] = useState([]);
-    const [favesManga, setFavesManga] = useState([]);
+    // const [watching, setWatching] = useState([]);
+    // const [reading, setReading] = useState([]);
+    // const [completedAnime, setCompletedAnime] = useState([]);
+    // const [completedManga, setCompletedManga] = useState([]);
+    // const [heldAnime, setHeldAnime] = useState([]);
+    // const [heldManga, setHeldManga] = useState([]);
+    // const [droppedAnime, setDroppedAnime] = useState([]);
+    // const [droppedManga, setDroppedManga] = useState([]);
+    // const [ptw, setPtw] = useState([]);
+    // const [ptr, setPtr] = useState([]);
+    // const [favesAnime, setFavesAnime] = useState([]);
+    // const [favesManga, setFavesManga] = useState([]);
 
 
 
@@ -125,7 +125,7 @@ const Profile = (props) => {
     const handleTabs = (anime, manga, stats) => {
         setShowAnime(anime);
         setShowManga(manga);
-        setShowStats(stats);
+        // setShowStats(stats);
         setJsonArray([]);
     }
 
@@ -140,116 +140,63 @@ const Profile = (props) => {
         "plantoread" : "Plan to Read"
     };
 
-    useEffect(()=>{
-        let username = props.userJson.username;
-        let mangaTags = ["favorites", "reading", "dropped", "completed", "onhold", "plantoread"];
-        let animeTags = ["favorites", "watching", "dropped", "completed", "onhold", "plantowatch"];
-        let url = "";
+
+
+    // const logState = ()=> {
+    //     console.log("\nwatching: ",watching,
+    //         "\nreading: ",reading,
+    //         "\ncompleteA: ",completedAnime,
+    //         "\ncompleteM: ",completedManga,
+    //         "\nheldA: ",heldAnime,
+    //         "\nheldM: ",heldManga,
+    //         "\ndroppedA: ",droppedAnime,
+    //         "\ndroppedM: ",droppedManga,
+    //         "\npw: ", ptw,
+    //         "\npr: ",ptr,
+    //         "\nfA: ",favesAnime,
+    //         "\nfM: ",favesManga,
+    //         );
+    // }
+
+    const stats = () =>{
+        let type = "Anime";
+        let parts = "Episodes";
+        let verb = "watched";
+        let presentTense = "watch";
+        let jsonKey = "anime_stats";
+        if (showManga){ 
+            type = "Manga";
+            parts = "Chapters";
+            verb = "read";
+            presentTense = "read";
+            jsonKey = "manga_stats";
+        }
+        if (props.userJson.anime_stats){
+            return <div className="stats">
+                {type} Completed : {props.userJson[jsonKey].completed}<br/>
+                {type} Dropped : {props.userJson[jsonKey].dropped}<br/>
+                {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]} <br/>
+                {showManga ?<span> Volumes {verb} : {props.userJson[jsonKey][`volumes_${verb}`]} <br/></span> : null}
+                {type} On Hold : {props.userJson[jsonKey].on_hold}<br/>
+                {type} Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}<br/>
+                {type} Re{verb} : {props.userJson[jsonKey][`re${verb}`]}<br/>
+                {type} Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}<br/>
+                Average Score Given : {props.userJson[jsonKey].mean_score}<br/>
+            </div>
+        }
+        else {
+            return null;
+        }
         
-        mangaTags.forEach((tag)=>{
-            if (tag !== "favorites"){
-
-                url = `https://api.jikan.moe/v3/user/${username}/mangalist/${tag}`;
-                
-                fetch(url)
-                .then(res => res.json())
-                .then(json => {
-                        switch(tag){
-                            case "reading":
-                                setReading(json.manga);
-                                break;
-                            case "dropped":
-                                setDroppedManga(json.manga);
-                                break;
-                            case "completed":
-                                setCompletedManga(json.manga);
-                                break;
-                            case "onhold":
-                                setHeldManga(json.manga);
-                                break;
-                            case "plantoread":
-                                setPtr(json.manga);
-                                break;
-                        }
-                    })
-                    
-            }
-            else {
-                url = `https://api.jikan.moe/v3/user/${username}`;
-                fetch(url)
-                .then(res => res.json())
-                .then(json => {
-                    setFavesManga(json.favorites.manga);
-                });
-            }
-        });
-        
-        animeTags.forEach((tag)=>{
-            if (tag !== "favorites"){
-
-                url = `https://api.jikan.moe/v3/user/${username}/animelist/${tag}`;
-                
-                fetch(url)
-                .then(res => res.json())
-                .then(json => {
-                        switch(tag){
-                            case "watching":
-                                setWatching(json.anime);
-                                break;
-                            case "dropped":
-                                setDroppedAnime(json.anime);
-                                break;
-                            case "completed":
-                                setCompletedAnime(json.anime);
-                                break;
-                            case "onhold":
-                                setHeldAnime(json.anime);
-                                break;
-                            case "plantowatch":
-                                setPtw(json.anime);
-                                break;
-                        }
-                    })
-                    
-            }
-            else {
-                url = `https://api.jikan.moe/v3/user/${username}`;
-                fetch(url)
-                .then(res => res.json())
-                .then(json => {
-                    setFavesAnime(json.favorites.anime);
-                });
-            }
-        });
-        
-
-
-
-    }, [props.userJson.username])
-
-    const logState = ()=> {
-        console.log("\nwatching: ",watching,
-            "\nreading: ",reading,
-            "\ncompleteA: ",completedAnime,
-            "\ncompleteM: ",completedManga,
-            "\nheldA: ",heldAnime,
-            "\nheldM: ",heldManga,
-            "\ndroppedA: ",droppedAnime,
-            "\ndroppedM: ",droppedManga,
-            "\npw: ", ptw,
-            "\npr: ",ptr,
-            "\nfA: ",favesAnime,
-            "\nfM: ",favesManga,
-            );
     }
 
     const renderList = () =>{
-        if (showStats){
-            return <UserStats/>
-        }
-        else {
-            return <ScrollingList animemanga={jsonArray} notTop={true} profile={true} showSingle={props.showSingle}/>
-        }
+        // if (showStats){
+        //     return <UserStats/>
+        // }
+        // else {
+        return <ScrollingList animemanga={jsonArray} notTop={true} profile={true} showSingle={props.showSingle}/>
+        // }
     };
 
 
@@ -258,14 +205,17 @@ const Profile = (props) => {
         <Fragment>
         <div className="profile" style={{display:"flex"}}>
             <div style={{flex:"50%"}}><img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} /></div>
-            {props.userJson.about ?  <p className="profile-about" style={{flex:"50%"}}>{props.userJson.about}</p> : <p>Bio Placeholder</p>}
-            <button onClick={logState} />
+            
+            <div style={{flex:"50%"}}>
+                {props.userJson.about ?  <p className="profile-about">{props.userJson.about}</p> : <p>Bio Placeholder</p>}
+                {stats()}
+            </div>
         </div>
         <div>
             <div className="profile-tabs" style={{display:"flex"}}>
                 <p className="profile-tabs-p" onClick={()=>{handleTabs(true, false, false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
                 <p className="profile-tabs-p" onClick={()=>{handleTabs(false, true, false)}} style={{border:(showManga ? "1px solid black": "")}}>Manga</p>
-                <p className="profile-tabs-p" onClick={()=>{handleTabs(false, false, true)}} style={{border:(showStats ? "1px solid black": "")}}>User Stats</p>
+                {/* <p className="profile-tabs-p" onClick={()=>{handleTabs(false, false, true)}} style={{border:(showStats ? "1px solid black": "")}}>User Stats</p> */}
             </div>
             { showAnime || showManga 
                 ? 
