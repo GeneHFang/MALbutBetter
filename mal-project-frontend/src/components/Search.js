@@ -35,7 +35,7 @@ function Search(props) {
     }
 
     const handleDropdown = (e) => {
-        console.log(e.target.innerText);
+        // console.log(e.target.innerText);
         props.setType(e.target.innerText);
         // setSearchType(e.target.innerText);
     }
