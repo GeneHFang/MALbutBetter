@@ -11,6 +11,7 @@ const MangaAnimeCard = (props) => {
         padding: "5px"
     });
 
+ 
     //window size check
     const [width, setWidth] = React.useState(window.innerWidth);
     const [height, setHeight] = React.useState(window.innerHeight);
@@ -31,9 +32,8 @@ const MangaAnimeCard = (props) => {
 
     }, []);
 
-    const mouseMove = (event)=> {
-        let e = event.nativeEvent
-        props.mousePosition(e);
+    const mouseMove = (e)=> {
+        props.mousePosition(e.pageX,e.pageY);
     }
 
     const mouseOut = ()=>{
@@ -43,18 +43,18 @@ const MangaAnimeCard = (props) => {
         setFlag(false);
     }
 
-    const mouseOver = (event) => {
+    const mouseOver = (e) => {
         setStyle({...style, backgroundColor:"#484c53"});
         clearTimeout(timer);
-        let e = event.nativeEvent
+        // let e = event.nativeEvent
         if (!flagged) {
             setFlag(true);
-            props.mousePosition(e);
+            props.mousePosition(e.pageX,e.pageY);
         }
         props.displayDetails(false);
         setTimer(setTimeout(function(){
             props.displayDetails(true, props.obj);           
-        },700, e));
+        },700));
     }
 
     const handleClick = () => {

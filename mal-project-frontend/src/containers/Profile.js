@@ -83,18 +83,19 @@ const Profile = (props) => {
         //total ep/chapters
         let airingOrPublishing = -1;
         let totalConsumed = 0;
-        let totalExists = 0;
+        // let totalExists = 0;
 
         json[type].forEach((animemanga)=>{
             arr.push(animemanga);
             totalScore += animemanga.score;
             if(!animemanga.score) {totalNoVotes++;}
 
-            airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
-            if (airingOrPublishing === 2) {//no longer airing or publishing
-                totalConsumed += animemanga.watched_episodes ? animemanga.watched_episodes : animemanga.read_chapters;
-                totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
-            }
+            // airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
+            // if (airingOrPublishing === 2) {//no longer airing or publishing
+                // console.log(animemanga.watched_episodes ? `watched: ${animemanga.watched_episodes}` : `read: ${animemanga.read_chapters}`)
+                totalConsumed += animemanga.watched_episodes || animemanga.watched_episodes===0 ? animemanga.watched_episodes : animemanga.read_chapters;
+                // totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
+            // }
         });
         console.log("Size of array: ", arr.length);
 
@@ -108,11 +109,11 @@ const Profile = (props) => {
                 totalScore += animemanga.score;
                 if(!animemanga.score) {totalNoVotes++;}
                 
-                airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
-                if (airingOrPublishing === 2) {//no longer airing or publishing
-                    totalConsumed += animemanga.watched_episodes ? animemanga.watched_episodes : animemanga.read_chapters;
-                    totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
-                }
+                // airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
+                // if (airingOrPublishing === 2) {//no longer airing or publishing
+                    totalConsumed += animemanga.watched_episodes || animemanga.watched_episodes===0 ? animemanga.watched_episodes : animemanga.read_chapters;
+                    // totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
+                // }
             });
             
             console.log("Size of array: ", arr.length);
@@ -120,7 +121,8 @@ const Profile = (props) => {
         totalScore = Math.round(((totalScore / (arr.length-totalNoVotes))+Number.EPSILON)*100)/100;
         setAverageScore(totalScore ? totalScore : 0);
 
-        totalConsumed = Math.round(((totalConsumed / totalExists)+Number.EPSILON)*100)/100;
+        // console.log("Total%",totalConsumed, "/", totalExists);
+        totalConsumed = Math.round(((totalConsumed / arr.length)+Number.EPSILON)*100)/100;
         setTotalConsumed(totalConsumed ? totalConsumed : -1);
 
         setJsonArray(arr);
@@ -246,12 +248,14 @@ const Profile = (props) => {
     const specificStats = () => {
         let listType = showAnime ? ListType[animeListType] : ListType[mangaListType];
         let showAverage = true;
-        let showConsumed = true;
         if (listType === 'Favorites' || listType.substr(0,4) === 'Plan' || averageScore === 0) showAverage=false;
+        let showConsumed = false;
+        if (listType === 'On Hold' || listType === 'Dropped') showConsumed=true;
         return (
             <div className="stats">
-                {showAverage && `Average Score for ${listType}: ${averageScore}`}
-                {showConsumed && `Completion percent : ${totalConsumed}`}
+                <h1>Statistics for {listType}</h1>
+                {showAverage && <p>Average Score Given: {averageScore}</p>}
+                {showConsumed && <p>Average {showAnime ? "Episodes Watched" : "Chapters Read" } Before {listType === "Dropped" ? "Dropping" : "Holding"} : {totalConsumed}</p>}
             </div>
         )
     }
