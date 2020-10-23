@@ -85,8 +85,14 @@ const Profile = (props) => {
         let totalConsumed = 0;
         // let totalExists = 0;
 
-        json[type].forEach((animemanga)=>{
-            arr.push(animemanga);
+        json[type].forEach(async (animemanga)=>{
+            console.log(animemanga["mal_id"]);
+            let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
+            const response = await fetch(url);
+            const innerJson = await response.json();
+
+
+            arr.push(innerJson);
             totalScore += animemanga.score;
             if(!animemanga.score) {totalNoVotes++;}
 
@@ -104,8 +110,14 @@ const Profile = (props) => {
             url = `https://api.jikan.moe/v3/user/${username}/${type}list/${args}/${pageNum}`;
             const response = await fetch(url);
             const json = await response.json();
-            json[type].forEach((animemanga)=>{
-                arr.push(animemanga);
+            json[type].forEach(async(animemanga)=>{
+                let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
+                const response = await fetch(url);
+                const innerJson = await response.json();
+    
+    
+                arr.push(innerJson);
+                // arr.push(animemanga);
                 totalScore += animemanga.score;
                 if(!animemanga.score) {totalNoVotes++;}
                 
