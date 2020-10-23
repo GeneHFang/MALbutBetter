@@ -1,11 +1,12 @@
 import React, {useEffect, useState, Fragment} from 'react';
-import {Dropdown, DropdownButton} from 'react-bootstrap';
+import {Dropdown, DropdownButton, Button} from 'react-bootstrap';
 import UserStats from './UserStats';
 import ScrollingList from './ScrollingList';
 import '../Profile.css';
 
 //temp img
 import defaultImage from '../images/ProfilePlaceholderTemp.jpg';
+import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
 const Profile = (props) => {
     // debugger
@@ -37,6 +38,8 @@ const Profile = (props) => {
     //Section Stats
     const [averageScore, setAverageScore] = useState(-1);
     const [totalConsumed, setTotalConsumed] = useState(-1);
+    const [malIDs, setMalIDs] = useState([]);
+    const [type, setType] = useState("");
     // const [totalExists, setTotalExists] = useState(-1);
 
     // const [watching, setWatching] = useState([]);
@@ -71,6 +74,8 @@ const Profile = (props) => {
     }
 
     const fetchList = async (username, type, args) => {
+        setType(type);
+        setMalIDs([]);
         setJsonArray([]);
         let pageNum = 1; 
         let url = `https://api.jikan.moe/v3/user/${username}/${type}list/${args}/${pageNum}`;
@@ -85,14 +90,16 @@ const Profile = (props) => {
         let totalConsumed = 0;
         // let totalExists = 0;
 
-        json[type].forEach(async (animemanga)=>{
+        json[type].forEach((animemanga)=>{
             console.log(animemanga["mal_id"]);
-            let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
-            const response = await fetch(url);
-            const innerJson = await response.json();
+            setMalIDs(prev => [...prev, animemanga["mal_id"]]);
+            // let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
+            // const response = await fetch(url);
+            // const innerJson = await response.json();
 
 
-            arr.push(innerJson);
+            // arr.push(innerJson);
+            arr.push(animemanga)
             totalScore += animemanga.score;
             if(!animemanga.score) {totalNoVotes++;}
 
@@ -110,14 +117,16 @@ const Profile = (props) => {
             url = `https://api.jikan.moe/v3/user/${username}/${type}list/${args}/${pageNum}`;
             const response = await fetch(url);
             const json = await response.json();
-            json[type].forEach(async(animemanga)=>{
-                let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
-                const response = await fetch(url);
-                const innerJson = await response.json();
+            json[type].forEach((animemanga)=>{
+                // let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
+                // const response = await fetch(url);
+                // const innerJson = await response.json();
+                
+                setMalIDs(prev => [...prev, animemanga["mal_id"]]);
     
     
-                arr.push(innerJson);
-                // arr.push(animemanga);
+                // arr.push(innerJson);
+                arr.push(animemanga);
                 totalScore += animemanga.score;
                 if(!animemanga.score) {totalNoVotes++;}
                 
@@ -257,6 +266,30 @@ const Profile = (props) => {
         // }
     };
 
+    const fetchDetails = () => {
+        console.log("here with ", malIDs);
+        malIDs.forEach(async (id) => {
+            let url = `https://api.jikan.moe/v3/${type}/${id}`;
+            const response = await fetch(url);
+            const innerJson = await response.json();
+
+            console.log(innerJson);
+
+        })
+    }
+
+    //Not complete
+    const sort = (by) => {
+        if (by === 'title') {
+            let arr = [...jsonArray];
+            console.log(arr);
+            arr.sort((a,b) => (a.title > b.title) ? 1 : -1);
+
+            console.log(arr);
+            setJsonArray(arr);
+        }
+    }
+
     const specificStats = () => {
         let listType = showAnime ? ListType[animeListType] : ListType[mangaListType];
         let showAverage = true;
@@ -264,10 +297,16 @@ const Profile = (props) => {
         let showConsumed = false;
         if (listType === 'On Hold' || listType === 'Dropped') showConsumed=true;
         return (
-            <div className="stats">
-                <h1>Statistics for {listType}</h1>
+            <div className="stats" style={{padding: 5}}>
                 {showAverage && <p>Average Score Given: {averageScore}</p>}
                 {showConsumed && <p>Average {showAnime ? "Episodes Watched" : "Chapters Read" } Before {listType === "Dropped" ? "Dropping" : "Holding"} : {totalConsumed}</p>}
+                <div style={{display:"flex", justifyContent:"center"}}>
+                    <Button variant = "outline-primary" onClick={fetchDetails}>Get More Details</Button>
+                    <DropdownButton variant = "outline-primary"  title="Sort By">
+                        <Dropdown.Item onClick={()=>sort("title")}>Title</Dropdown.Item>
+                        <Dropdown.Item onClick={()=>sort("date")}>Release Date</Dropdown.Item>
+                    </DropdownButton>
+                    </div>
             </div>
         )
     }
