@@ -57,12 +57,12 @@ const ScrollingList = (props) => {
         }
     };
 
-    const getMousePosition = (mouseEvent) => {
+    const getMousePosition = (x, y) => {
         
-        if (mouseEvent){
-            setMouseX(mouseEvent.pageX);
-            setMouseY(mouseEvent.pageY);
-        }
+        // if (mouseEvent){
+            setMouseX(x);
+            setMouseY(y);
+        // }
     }; 
 
     useEffect(()=>{

@@ -17,6 +17,7 @@ const MangaAnimeDetails = (props) => {
   useEffect(() => {
       return () => {
         window.removeEventListener('mousemove', () => {})
+        window.removeEventListener('mouseout', () => {})
       }
     }, []);
 
