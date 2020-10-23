@@ -21,10 +21,24 @@
 */
 .title-bg{
   position: relative;
-  text-align: center;
+  text-align: left;
+
+}
+.title-bg1{
+  position: relative;
+  text-align: left;
+}
+
+.title-card2{
+  width: 120px;
+  height: 180px;
+}
+
+.title-card {
+  width: 200px;
 }
 .row {
-  color: #a50051;
+  color: cornflowerblue;
   font-weight: bold;
   display: absolute;
   clear: both;
@@ -32,6 +46,40 @@
   justify-content: center;
   transform: translate(0.5%, -179%);
   min-height: 386px;  
+  min-width: 1920px;
+}
+
+.col {
+  color: cornflowerblue;
+  font-weight: bold;
+  display: absolute;
+  clear: both;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.col1 {
+  color: cornflowerblue;
+  font-size: 12px;
+  font-weight: bold;
+  display: absolute;
+  clear: both;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(0%, -195%);
+  justify-content: center;
+  min-width: 500px;
+}
+
+.row2 {
+  color: cornflowerblue;
+  font-weight: bold;
+  display: flex;
+  clear: both;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
 
 
@@ -39,13 +87,18 @@
   position: relative;
   text-align: center;
   background: url(images/background.jpg);
-  background-position: center;
+  background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 .Title-Content {
+transform: translate(266.5%, 28%);
+}
+
+.Title-Content1{
   padding-right: 50px;
   padding-left: 50px;
 }
@@ -53,12 +106,38 @@
 .Rank {
   padding-right: 50px;
   padding-left: 50px;
+  padding-bottom: 50px;
+  transform: translate(7.5%, 7%);
+  font-size: 18px;
 }
 
 .Popularity {
   padding-right: 50px;
   padding-left: 50px;
+  transform: translate(7.5%, 240%);
+  font-size: 18px;
 }
+
+.Rank2 {
+  padding-right: 50px;
+  padding-left: 50px;
+  transform: translate(0%, 45%);
+}
+
+.Popularity2 {
+  padding-right: 50px;
+  padding-left: 50px;
+  transform: translate(5%, 65%);
+}
+
+.Status {
+  transform: translate(-330%, 260%);
+}
+
+.Status2 {
+  transform: translate(0%, 450%);
+}
+
 .wrapper {
   margin: 0 auto;
   width:960px;
