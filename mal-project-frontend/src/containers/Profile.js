@@ -40,6 +40,13 @@ const Profile = (props) => {
     const [totalConsumed, setTotalConsumed] = useState(-1);
     const [malIDs, setMalIDs] = useState([]);
     const [type, setType] = useState("");
+    const [sortName, setSortName] = useState("");
+    const [ascDesc, setAscDesc] = useState("Ascending");
+    
+    //state needed for filtering
+    const [unfiltered, setUnfiltered]= useState([]);
+    const [filterName, setFilterName] = useState("");
+
     // const [totalExists, setTotalExists] = useState(-1);
 
     // const [watching, setWatching] = useState([]);
@@ -184,9 +191,14 @@ const Profile = (props) => {
     }, [props.userJson, showAnime, showManga, animeListType, mangaListType]);
 
 
+    useEffect(() => {
+        sort(sortName);
+    }, [ascDesc])
+
     const changeType = (e) => {
         // debugger;
         console.log(e.target.getAttribute("searchval"));
+        setSortName("");
         if (showAnime){
             setAnimeListType(e.target.getAttribute("searchval"));
         }
@@ -266,28 +278,90 @@ const Profile = (props) => {
         // }
     };
 
-    const fetchDetails = () => {
-        console.log("here with ", malIDs);
-        malIDs.forEach(async (id) => {
-            let url = `https://api.jikan.moe/v3/${type}/${id}`;
-            const response = await fetch(url);
-            const innerJson = await response.json();
+    // const fetchDetails = () => {
+    //     console.log("here with ", malIDs);
+    //     malIDs.forEach(async (id) => {
+    //         let url = `https://api.jikan.moe/v3/${type}/${id}`;
+    //         const response = await fetch(url);
+    //         const innerJson = await response.json();
 
-            console.log(innerJson);
+    //         console.log(innerJson);
 
-        })
-    }
+    //     })
+    // }
 
     //Not complete
     const sort = (by) => {
-        if (by === 'title') {
-            let arr = [...jsonArray];
-            console.log(arr);
-            arr.sort((a,b) => (a.title > b.title) ? 1 : -1);
-
+        setSortName(by);
+        let asc = (ascDesc === 'Ascending') ? true : false; 
+        let arr = [...jsonArray];
+        if (by === 'Title') {
+            arr.sort((a,b) => {
+                if (asc) {
+                    return (a.title < b.title) ? 1 : -1;
+                } 
+                else {
+                    return (a.title > b.title) ? 1 : -1;
+                }
+            });
+            setJsonArray(arr);
+        }
+        if (by === 'Release Date'){
+            console.log("here");
+            let fav;
+            if (ListType[animeListType] === 'Favorites' || ListType[mangaListType] === 'Favorites'){
+                fav = true;
+            } 
+            else { fav = false; }
+            console.log(arr, "and also", fav);
+            arr.sort((a,b) => {
+                if (fav) {
+                    if (asc) {
+                        return (Date.parse(a.aired ? a.aired.from : "") > Date.parse(b.aired ? b.aired.from : "")) ? 1 : -1;
+                    } 
+                    else {
+                        return (Date.parse(a.aired ? a.aired.from : "") < Date.parse(b.aired ? b.aired.from : "")) ? 1 : -1;
+                    }
+                }
+                else {
+                    if (asc) {
+                        return (Date.parse(a.start_date) > Date.parse(b.start_date)) ? 1 : -1;
+                    } 
+                    else {
+                        return (Date.parse(a.start_date) < Date.parse(b.start_date)) ? 1 : -1;
+                    }
+                }
+            });
             console.log(arr);
             setJsonArray(arr);
         }
+    }
+
+    const filter = (by) => {
+        if (!unfiltered[0]) {setUnfiltered([...jsonArray]);}
+        setFilterName(by);
+        let arr = unfiltered[0] ? [...unfiltered] : [...jsonArray];
+
+        let filterObj = {
+            "One Shots" : "One-shot",
+            "Movies" : "Movie",
+            "Anime" : "TV",
+            "Manga" : "Manga",
+            "OVAs" : "OVA",
+            "ONAs" : "ONA"
+        }
+
+        arr = arr.filter(ele => {
+            return(ele.type === filterObj[by])
+        });
+
+        setJsonArray(arr);
+    }
+
+    const resetFilter = () => {
+        setJsonArray([...unfiltered]);
+        setFilterName("");
+        setUnfiltered([]);
     }
 
     const specificStats = () => {
@@ -297,17 +371,54 @@ const Profile = (props) => {
         let showConsumed = false;
         if (listType === 'On Hold' || listType === 'Dropped') showConsumed=true;
         return (
-            <div className="stats" style={{padding: 5}}>
+            <Fragment >
+                 <div style={{display:"flex", justifyContent:"center"}}>
+                    {/* <Button variant = "outline-primary" onClick={fetchDetails}>Get More Details</Button> */}
+                    <DropdownButton variant = "outline-secondary" title = {showAnime ? ListType[animeListType] : ListType[mangaListType] } id = "input-group-dropdown">
+                                    <Dropdown.Item href="#" onClick = {changeType} searchval="favorites">Favorites</Dropdown.Item>
+                                    <Dropdown.Item href="#" onClick = {changeType} searchval={showAnime ? "watching" : "reading"}>{showAnime ? "Currently Watching" : "Currently Reading"}</Dropdown.Item>
+                                    <Dropdown.Item href="#" onClick = {changeType} searchval="completed">Completed</Dropdown.Item>
+                                    <Dropdown.Item href="#" onClick = {changeType} searchval="onhold">On Hold</Dropdown.Item>
+                                    <Dropdown.Item href="#" onClick = {changeType} searchval="dropped">Dropped</Dropdown.Item>
+                                    <Dropdown.Item href="#" onClick = {changeType} searchval={showAnime ? "plantowatch" : "plantoread"}>{showAnime ? "Plan to Watch" : "Plan to Read"}</Dropdown.Item>
+                    </DropdownButton>
+                    <DropdownButton variant = "outline-primary"  title={`Sort By ${sortName}`}>
+                        <Dropdown.Item onClick={()=>sort("Title")}>Title</Dropdown.Item>
+                        <Dropdown.Item onClick={()=>sort("Release Date")}>Release Date</Dropdown.Item>
+                    </DropdownButton>
+                    {
+                        sortName ? 
+                            <DropdownButton variant = "outline-primary"  title={`${ascDesc}`}>
+                                <Dropdown.Item onClick={()=>setAscDesc("Ascending")}>Ascending</Dropdown.Item>
+                                <Dropdown.Item onClick={()=>setAscDesc("Descending")}>Descending</Dropdown.Item>
+                            </DropdownButton>
+                            : 
+                            null
+                    }
+                        {
+                            showAnime ?
+                                <DropdownButton variant = "outline-primary"  title={`Filter By ${filterName}`}>
+                                    <Dropdown.Item onClick={()=>filter("Movies")}>Movies</Dropdown.Item>
+                                    <Dropdown.Item onClick={()=>filter("OVAs")}>OVAs</Dropdown.Item>
+                                    <Dropdown.Item onClick={()=>filter("ONAs")}>ONAs</Dropdown.Item>
+                                    <Dropdown.Item onClick={()=>filter("Anime")}>TV Anime</Dropdown.Item>
+                                </DropdownButton>
+                            :
+                                <DropdownButton variant = "outline-primary"  title={`Filter By ${filterName}`}>
+                                    <Dropdown.Item onClick={()=>filter("One Shots")}>One Shots</Dropdown.Item>
+                                    <Dropdown.Item onClick={()=>filter("Manga")}>Manga</Dropdown.Item>
+                                </DropdownButton>
+                        }
+                    {
+                        unfiltered[0] ? 
+                            <Button variant = "outline-primary" title="Reset Filter" onClick={resetFilter}>Reset Filter</Button>
+                            :
+                            null
+                    }
+                    </div>
                 {showAverage && <p>Average Score Given: {averageScore}</p>}
                 {showConsumed && <p>Average {showAnime ? "Episodes Watched" : "Chapters Read" } Before {listType === "Dropped" ? "Dropping" : "Holding"} : {totalConsumed}</p>}
-                <div style={{display:"flex", justifyContent:"center"}}>
-                    <Button variant = "outline-primary" onClick={fetchDetails}>Get More Details</Button>
-                    <DropdownButton variant = "outline-primary"  title="Sort By">
-                        <Dropdown.Item onClick={()=>sort("title")}>Title</Dropdown.Item>
-                        <Dropdown.Item onClick={()=>sort("date")}>Release Date</Dropdown.Item>
-                    </DropdownButton>
-                    </div>
-            </div>
+            </Fragment>
         )
     }
 
@@ -331,18 +442,13 @@ const Profile = (props) => {
             </div>
             { showAnime || showManga 
                 ? 
-                    <DropdownButton variant = "outline-secondary" title = {showAnime ? ListType[animeListType] : ListType[mangaListType] } id = "input-group-dropdown">
-                                <Dropdown.Item href="#" onClick = {changeType} searchval="favorites">Favorites</Dropdown.Item>
-                                <Dropdown.Item href="#" onClick = {changeType} searchval={showAnime ? "watching" : "reading"}>{showAnime ? "Currently Watching" : "Currently Reading"}</Dropdown.Item>
-                                <Dropdown.Item href="#" onClick = {changeType} searchval="completed">Completed</Dropdown.Item>
-                                <Dropdown.Item href="#" onClick = {changeType} searchval="onhold">On Hold</Dropdown.Item>
-                                <Dropdown.Item href="#" onClick = {changeType} searchval="dropped">Dropped</Dropdown.Item>
-                                <Dropdown.Item href="#" onClick = {changeType} searchval={showAnime ? "plantowatch" : "plantoread"}>{showAnime ? "Plan to Watch" : "Plan to Read"}</Dropdown.Item>
-                    </DropdownButton>
+                    <div>
+                        {specificStats()}
+                        
+                    </div>
                 :
                     null
             }
-            {specificStats()}
             {renderList()}
         </div>
         </Fragment>
