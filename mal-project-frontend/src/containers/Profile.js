@@ -65,6 +65,10 @@ const Profile = (props) => {
 
 
     const [jsonArray, setJsonArray] = useState([]); 
+    const [resCache, setResCache] = useState({
+        anime: [],
+        manga: []
+    });
 
     const fetchAnimeManga = async (type, list) => {
         setJsonArray([]);
@@ -158,29 +162,69 @@ const Profile = (props) => {
 
     }
 
+    useEffect(() => {
+        if(showAnime){
+            setResCache(resCache => {
+                return {...resCache, anime: [...jsonArray]}
+            });
+        }
+        else {
+            setResCache(resCache => {
+                return {...resCache, manga: [...jsonArray]}
+            });
+        }
+    }, [jsonArray])
+
+    const fetchCallBack = async (type) => {
+        if (type === "anime"){
+            if(animeListType==="favorites" && props.userJson.favorites.anime){
+                await fetchAnimeManga(type, props.userJson.favorites.anime);
+            }
+            else{
+                await fetchList(props.userJson.username, type, animeListType);
+            }
+        }
+        else {
+            if(mangaListType==="favorites" && props.userJson.favorites.manga){
+                await fetchAnimeManga(type, props.userJson.favorites.manga);
+            }
+            else{
+                await fetchList(props.userJson.username, type, mangaListType);
+            }
+        }
+    }
+
    
 
     useEffect(() => {
         const f = async ()=> {
             if (props.userJson.favorites){
+                console.log("I am here first")
                 let type = "";
                 if (showAnime){              
                     type = "anime";
-                    if(animeListType==="favorites" && props.userJson.favorites.anime){
-                        await fetchAnimeManga(type, props.userJson.favorites.anime);
-                    }
-                    else{
-                        await fetchList(props.userJson.username, type, animeListType);
-                    }
+                    // if(animeListType==="favorites" && props.userJson.favorites.anime){
+                    //     await fetchAnimeManga(type, props.userJson.favorites.anime);
+                    // }
+                    // else{
+                    //     await fetchList(props.userJson.username, type, animeListType);
+                    // }
+                    await fetchCallBack(type);
+                    console.log(jsonArray);
+                    console.log(resCache);
                 }
                 else if (showManga){
                     type = "manga"                
-                    if(mangaListType==="favorites" && props.userJson.favorites.manga){
-                        await fetchAnimeManga(type, props.userJson.favorites.manga);
-                    }
-                    else{
-                        await fetchList(props.userJson.username, type, mangaListType);
-                    }
+                    // if(mangaListType==="favorites" && props.userJson.favorites.manga){
+                    //     await fetchAnimeManga(type, props.userJson.favorites.manga);
+                    // }
+                    // else{
+                    //     await fetchList(props.userJson.username, type, mangaListType);
+                    // }
+                    await fetchCallBack(type);
+                    setResCache(resCache => {
+                        return {...resCache, manga: [...jsonArray]}
+                    })
                 }
             }
         
@@ -188,8 +232,33 @@ const Profile = (props) => {
         }
         
         f();
-    }, [props.userJson, showAnime, showManga, animeListType, mangaListType]);
-
+    }, [props.userJson, animeListType, mangaListType]);
+    
+    useEffect( () => {
+        const f = async () => {
+            console.log(resCache);
+            if (showAnime && resCache.anime) {
+                if (resCache.anime.length > 0) {
+                    setJsonArray([...resCache.anime]);
+                }
+                else if (props.userJson.favorites) {
+                    let type = "anime";
+                    await fetchCallBack(type);
+                }
+            }
+            else if (showManga && resCache.manga) {
+                if (resCache.manga.length > 0){
+                    setJsonArray([...resCache.manga]);
+                    }
+                
+                else if (props.userJson.favorites){
+                    let type = "manga";
+                    await fetchCallBack(type);
+                }
+            }
+        }
+        f();
+    },[showAnime, showManga]);
 
     useEffect(() => {
         sort(sortName);
@@ -199,6 +268,7 @@ const Profile = (props) => {
         // debugger;
         console.log(e.target.getAttribute("searchval"));
         setSortName("");
+
         if (showAnime){
             setAnimeListType(e.target.getAttribute("searchval"));
         }
@@ -210,7 +280,11 @@ const Profile = (props) => {
     const handleTabs = (anime, manga, stats) => {
         setShowAnime(anime);
         setShowManga(manga);
+        props.setType(anime ? "Anime" : "Manga");
         // setShowStats(stats);
+        // setResCache(resCache => {
+        //     return {...resCache, [anime ? "anime" : "manga"]: [...jsonArray]}
+        // });
         setJsonArray([]);
     }
 
@@ -256,7 +330,6 @@ const Profile = (props) => {
                     {type} Completed : {props.userJson[jsonKey].completed}<br/>
                     {type} Dropped : {props.userJson[jsonKey].dropped}<br/>
                     {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]} <br/>
-                    {showManga ?<span> Volumes {verb} : {props.userJson[jsonKey][`volumes_${verb}`]} <br/></span> : null}
                     {type} On Hold : {props.userJson[jsonKey].on_hold}<br/>
                     {type} Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}<br/>
                     {type} Re{verb} : {props.userJson[jsonKey][`re${verb}`]}<br/>
