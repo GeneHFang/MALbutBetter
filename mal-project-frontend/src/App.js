@@ -34,6 +34,7 @@ function App() {
   //form control
   const [query, setQuery] = useState("");
   const [type, setType] = useState("User");
+  const [typeOverride, setTypeOverride] = useState("");
 
   useEffect(()=>{
     return ()=>{
@@ -114,7 +115,7 @@ function App() {
       return <Error message={errorMsg.error ? errorMsg : {message:"renderContent Error"}} /> 
     }
     else if (SearchType1 === "User"){
-      return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson} showSingle={showSingle}/>
+      return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson} showSingle={showSingle} setType={setTypeOverride}/>
     }
     else if (SearchType1 === "Anime" || SearchType1 === "Manga") {
       console.log("here with SearchType1===Anime ", SearchType1==="Anime" );
@@ -139,7 +140,7 @@ function App() {
     setShowAnime(false);
     setShowError(false);
     setSearchStatus("notpresearch");
-    if (type==="Manga") {
+    if (type==="Manga" || typeOverride === "Manga") {
       setShowSingleManga(true);
     } 
     else {
