@@ -6,6 +6,7 @@ import '../Profile.css';
 
 //temp img
 import defaultImage from '../images/ProfilePlaceholderTemp.jpg';
+import statCard from '../images/Stats_Card.png';
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
 const Profile = (props) => {
@@ -46,6 +47,11 @@ const Profile = (props) => {
     //state needed for filtering
     const [unfiltered, setUnfiltered]= useState([]);
     const [filterName, setFilterName] = useState("");
+
+
+    //resizing/reposition state
+    const [width, setWidth] = useState(window.innerWidth);
+    const [height, setHeight] = useState(window.innerHeight);
 
     // const [totalExists, setTotalExists] = useState(-1);
 
@@ -262,7 +268,16 @@ const Profile = (props) => {
 
     useEffect(() => {
         sort(sortName);
-    }, [ascDesc])
+    }, [ascDesc]);
+
+    useEffect(() => {
+        window.addEventListener("resize", updateWidthAndHeight);
+        return () => window.removeEventListener("resize", updateWidthAndHeight);
+    }, []);
+    const updateWidthAndHeight = () => {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+    };
 
     const changeType = (e) => {
         // debugger;
@@ -326,15 +341,18 @@ const Profile = (props) => {
 
         return ( props.userJson[jsonKey] 
             ?
-                <div className="stats">
-                    {type} Completed : {props.userJson[jsonKey].completed}<br/>
-                    {type} Dropped : {props.userJson[jsonKey].dropped}<br/>
-                    {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]} <br/>
-                    {type} On Hold : {props.userJson[jsonKey].on_hold}<br/>
-                    {type} Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}<br/>
-                    {type} Re{verb} : {props.userJson[jsonKey][`re${verb}`]}<br/>
-                    {type} Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}<br/>
-                    Average Score Given : {props.userJson[jsonKey].mean_score}<br/>
+                <div className="stats" style={{position:"relative"}}>
+                    <img src={statCard} style={{position:"absolute"}}/>
+                    <div style={{position:"absolute", top:"-50px"}}>
+                        {type} Completed : {props.userJson[jsonKey].completed}<br/>
+                        {type} Dropped : {props.userJson[jsonKey].dropped}<br/>
+                        {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]} <br/>
+                        {type} On Hold : {props.userJson[jsonKey].on_hold}<br/>
+                        {type} Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}<br/>
+                        {type} Re{verb} : {props.userJson[jsonKey][`re${verb}`]}<br/>
+                        {type} Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}<br/>
+                        Average Score Given : {props.userJson[jsonKey].mean_score}<br/>
+                    </div>
                 </div>
             :
                 null
@@ -499,14 +517,26 @@ const Profile = (props) => {
     return(
         
         <Fragment>
-        <div className="profile" style={{display:"flex"}}>
-            <div style={{flex:"50%"}}><img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} /></div>
-            
-            <div style={{flex:"50%"}}>
-                {props.userJson.about ?  <p className="profile-about">{props.userJson.about}</p> : <p>Bio Placeholder</p>}
-                {stats()}
-            </div>
-        </div>
+            {
+            width >= 1100 ?
+                <div className="profile" style={{display:"flex"}}>
+                    <div style={{flex:"50%"}}><img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} /></div>
+                    
+                    <div style={{flex:"50%"}}>
+                        {props.userJson.about ?  <p className="profile-about">{props.userJson.about}</p> : <p>Bio Placeholder</p>}
+                        {stats()}
+                    </div>
+                </div>
+            :
+                <div className="profile" >
+                <div ><img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} /></div>
+                
+                <div >
+                    {props.userJson.about ?  <p className="profile-about">{props.userJson.about}</p> : <p>Bio Placeholder</p>}
+                    {stats()}
+                </div>
+                </div>
+            }
         <div>
             <div className="profile-tabs" style={{display:"flex"}}>
                 <p className="profile-tabs-p" onClick={()=>{handleTabs(true, false, false)}} style={{border:(showAnime ? "1px solid black": "")}}>Anime</p>
