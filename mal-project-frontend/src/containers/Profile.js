@@ -346,16 +346,16 @@ const Profile = (props) => {
                     <div className="stats">
                         <img src={statCard}/>
                         {/* for regular view, left ~42% */}
-                        <div style={{position:"absolute", top:"28%", left:"15%", display:"flex", flexDirection:"column", fontSize:"22px", width:"800px"}}>
+                        <div style={{position:"absolute", top:"30%", left:"15%", display:"flex", flexDirection:"column", fontSize:"22px", width:"800px"}}>
                             <div className="statRow" style={{ flex:"1", display:"flex", flexDirection:"row"}}>
                                 <span className="fillerBig" style={{flex:"35%"}}/>
-                                <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                                <span style={{textAlign:"left", whiteSpace:"nowrap",flex:"25%"}}>
                                     Completed : {props.userJson[jsonKey].completed}
                                     <br/>
                                     Dropped : {props.userJson[jsonKey].dropped}
                                 </span>
                                 <span className="fillerSmall" style={{flex:"17%"}}/>
-                                <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                                <span style={{textAlign:"left", whiteSpace:"nowrap",flex:"25%"}}>
                                     {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]}
                                     <br/>
                                     On Hold : {props.userJson[jsonKey].on_hold}
@@ -365,13 +365,13 @@ const Profile = (props) => {
                             <div className="separator" style={{flex:"1"}}> <br/><br/></div>
                             <div className="statRow" style={{ flex:"1", display:"flex", flexDirection:"row"}}>
                                 <span className="fillerSmall" style={{flex:"11%"}}/>
-                                <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                                <span style={{textAlign:"left",whiteSpace:"nowrap",flex:"25%"}}>
                                     Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}
                                     <br/>
                                     Re{verb} : {props.userJson[jsonKey][`re${verb}`]}
                                 </span>
                                 <span className="fillerSmall" style={{flex:"6.5%"}}/>
-                                <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                                <span style={{textAlign:"left",whiteSpace:"nowrap",flex:"25%"}}>
                                     Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}
                                     <br/>
                                     Average Score Given : {props.userJson[jsonKey].mean_score}
@@ -382,39 +382,27 @@ const Profile = (props) => {
                     </div>
                 : 
                     <div className="stats">
-                            <img src={statCard}/>
+                            <img style={{width:"450px",height:"750px"}} src={statCard}/>
                             {/* for regular view, left ~42% */}
-                            <div style={{position:"absolute", display:"flex", flexDirection:"column", fontSize:"22px", width:"800px"}}>
-                                <div className="statRow" style={{ flex:"1", display:"flex", flexDirection:"row"}}>
-                                    <span className="fillerBig" style={{flex:"35%"}}/>
-                                    <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                            <div style={{position:"absolute", top:"30%", display:"flex", flexDirection:"column", fontSize:"16px", width:"400px",left:"50%", transform: "translateX(-50%)"}}>
+                                <div className="statRow1" style={{transform:"translateX(5%)"}}>
                                         Completed : {props.userJson[jsonKey].completed}
                                         <br/>
-                                        Dropped : {props.userJson[jsonKey].dropped}
-                                    </span>
-                                    <span className="fillerSmall" style={{flex:"17%"}}/>
-                                    <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                                        Dropped : {props.userJson[jsonKey].dropped} 
+                                        <br/>
                                         {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]}
                                         <br/>
                                         On Hold : {props.userJson[jsonKey].on_hold}
-                                    </span>
-                                    <span className="fillerSmall" style={{flex:"30%"}}/>
-                                </div>
-                                <div className="separator" style={{flex:"1"}}> <br/><br/></div>
-                                <div className="statRow" style={{ flex:"1", display:"flex", flexDirection:"row"}}>
-                                    <span className="fillerSmall" style={{flex:"11%"}}/>
-                                    <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                                        </div>
+                                <br/><br/>
+                                <div className="statRow2" style={{transform:"translateY(20%)"}}>
                                         Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}
                                         <br/>
                                         Re{verb} : {props.userJson[jsonKey][`re${verb}`]}
-                                    </span>
-                                    <span className="fillerSmall" style={{flex:"6.5%"}}/>
-                                    <span style={{whiteSpace:"nowrap",flex:"25%"}}>
+                                        <br/>
                                         Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}
                                         <br/>
                                         Average Score Given : {props.userJson[jsonKey].mean_score}
-                                    </span>
-                                    <span className="fillerBig" style={{flex:"25%"}}/>
                                 </div> 
                             </div>
                         </div>
