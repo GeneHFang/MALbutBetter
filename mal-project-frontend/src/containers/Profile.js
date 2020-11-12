@@ -1,5 +1,5 @@
 import React, {useEffect, useState, Fragment} from 'react';
-import {Dropdown, DropdownButton, Button} from 'react-bootstrap';
+import {Dropdown, DropdownButton, Button, InputGroup, FormControl} from 'react-bootstrap';
 import UserStats from './UserStats';
 import ScrollingList from './ScrollingList';
 import '../Profile.css';
@@ -47,6 +47,7 @@ const Profile = (props) => {
     //state needed for filtering
     const [unfiltered, setUnfiltered]= useState([]);
     const [filterName, setFilterName] = useState("");
+    const [filterSearch, setFilterSearch] = useState("");
 
 
     //resizing/reposition state
@@ -269,6 +270,25 @@ const Profile = (props) => {
     useEffect(() => {
         sort(sortName);
     }, [ascDesc]);
+
+    useEffect(()=>{
+        if (filterSearch.split(" ").join("").length > 2){
+            if (!unfiltered[0]) {setUnfiltered([...jsonArray]);}
+            let arr = [];
+
+            jsonArray.forEach(ele => {
+                let title =  ele.title ? ele.title.split(" ").join("").toLowerCase() : "";
+                let titleEng = ele.title_english ? ele.title_english.split(" ").join("").toLowerCase(): "";
+                // debugger;
+
+                if (title.includes(filterSearch.split(" ").join("").toLowerCase()) || titleEng.includes(filterSearch.split(" ").join("").toLowerCase())){
+                    arr.push(ele);
+                }
+            });
+            setJsonArray(arr);
+        }
+        else if (filterSearch.length === 0 && unfiltered[0]){ resetFilter(); }
+    }, [filterSearch])
 
     useEffect(() => {
         window.addEventListener("resize", updateWidthAndHeight);
@@ -516,6 +536,16 @@ const Profile = (props) => {
         return (
             <Fragment >
                  <div style={{display:"flex", justifyContent:"center"}}>
+                    <InputGroup>
+                        <FormControl
+                            placeholder = "Search"
+                            value = {filterSearch}
+                            onChange ={ e => {
+                                setFilterSearch(e.target.value);
+                                }
+                            }
+                        />
+                    </InputGroup>
                     {/* <Button variant = "outline-primary" onClick={fetchDetails}>Get More Details</Button> */}
                     <DropdownButton variant = "outline-secondary" title = {showAnime ? ListType[animeListType] : ListType[mangaListType] } id = "input-group-dropdown">
                                     <Dropdown.Item href="#" onClick = {changeType} searchval="favorites">Favorites</Dropdown.Item>
