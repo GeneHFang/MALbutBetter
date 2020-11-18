@@ -1,10 +1,25 @@
 import React, {useEffect, useState, Fragment} from 'react';
-import '../MangaPage.css';
+import {ReadMore} from 'react-read-more-less';
+import ReadMoreAndLess from 'react-read-more-less';
+import ReactPlayer from "react-player"
+import '../MangaPage.css'
 
-import defaultImage from '../images/ProfilePlaceholderTemp.jpg';
+import defaultImage from '../images/background.jpg';
+import titleholderImage from '../images/Title Card Holder 1-2.png';
+import titleholderImage2 from '../images/Title Card Holder2.png';
+import contentImage from '../images/Content Holder.png';
+import { getElementError } from '@testing-library/react';
 
 const MangaPage = (props) => {
     const [info, setInfo] = useState({});
+    const [readMore, setReadMore] = useState(false);
+    const [width, setWidth] = React.useState(window.innerWidth);
+    const [height, setHeight] = React.useState(window.innerHeight);
+
+    const updateWidthAndHeight = () => {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+    };
 
     useEffect(()=>{
         let searchURL = `https://api.jikan.moe/v3/manga/${props.mal_id}`;
@@ -15,66 +30,133 @@ const MangaPage = (props) => {
             setInfo(json);
         })
     },[])
-    
 
-    /*
-        Results format 
+    React.useEffect(() => {
+        window.addEventListener("resize", updateWidthAndHeight);
+        return () => window.removeEventListener("resize", updateWidthAndHeight);
+    });
 
-        
-        aired: {from: "2002-03-28T00:00:00+00:00", to: "2002-06-20T00:00:00+00:00", prop: {…}, string: "Mar 28, 2002 to Jun 20, 2002"}
-        airing: false
-        background: null
-        broadcast: "Unknown"
-        duration: "25 min per ep"
-        ending_themes: [""Ame to Sanbika (雨と賛美歌)" by Umeno Yoshizawa"]
-        episodes: 13
-        favorites: 14
-        genres: (6) [{…}, {…}, {…}, {…}, {…}, {…}]
-        image_url: "https://cdn.myanimelist.net/images/anime/5/15442.jpg"
-        licensors: (2) [{…}, {…}]
-        mal_id: 1706
-        members: 7800
-        opening_themes: [""Style" by Grand Zero"]
-        popularity: 5167
-        premiered: "Spring 2002"
-        producers: (2) [{…}, {…}]
-        rank: 5413
-        rating: "PG-13 - Teens 13 or older"
-        related: {Adaptation: Array(1), Alternative setting: Array(1)}
-        request_cache_expiry: 6778
-        request_cached: true
-        request_hash: "request:anime:11bb5c66cc9ca16620389818afd8abddd000b234"
-        score: 6.57
-        scored_by: 2738
-        source: "Manga"
-        status: "Finished Airing"
-        studios: [{…}]
-        synopsis: "It is a harsh and barren wasteland, where the weak aren't allowed to dream. It is also a sacred land for true men, for there is no place a man can feel more alive. This is the Gun Frontier. Sea Pirate Captain Harlock and the errant samurai, Tochiro arrive in the United States on the Western Frontier. Along with a mysterious woman they meet along the way, the two friends challenge sex rings, bandits, and corrupt sheriff. They are searching for a lost clan of Japanese immigrants, and they will tear Gun Frontier from end to end until they find it. (Source: ANN)"
-        title: "Gun Frontier"
-        title_english: null
-        title_japanese: "ガンフロンティア"
-        title_synonyms: []
-        trailer_url: null
-        type: "TV"
-        url: "https://myanimelist.net/anime/1706/Gun_Frontier"
-        __proto__: Object
-
-
-    */
-
+    const genre = () => {
+        return info.genres.map(genre_list_element=>{return (<p>{genre_list_element.name}</p>)});
+    };
 
     return(
-        <Fragment>
-            
-        <div className="MangaPage" style={{display:"flex"}}>
-            <img src={info.image_url ? info.image_url : defaultImage} style={{width:200, height:300}} />
-            {info.title ?  <p>{info.title}</p> : <p>Title Placeholder</p>}
-            {info.synopsis ?  <p>{info.synopsis}</p> : <p>Summary Placeholder</p>}
-            {info.volumes ?  <p>Number of Volumes: {info.volumes}</p> : <p>Number of Volumes</p>}
-            {info.chapters ?  <p>Number of Chapters: {info.chapters}</p> : <p>Number of Chapters</p>}
+        <div id="wrapper">
+            { info.url 
+                ? (width >= 1100
+                    ? <div id="wrapper">
+                    <div className="Content-Area">
+                        <img src= {contentImage} className="content-bg"></img>
+                        <div class="Title-Content">
+                            <img src={info.image_url} style={{width:"160px", height:"240px", pointerEvents:"none"}} className="title-card2"/>
+                            <p>{info.title}</p>
+                        </div>
+                        <div class="Synopsis">
+                            {info.synopsis}
+                        </div>
+                        <div class="Rank">
+                            <p>Rank : {info.rank}</p>
+                            <p>Score : {info.score}</p>
+                            <p>({info.scored_by} Votes)</p>
+                        </div>
+                        <div className="Popularity">
+                            <p>Popularity : {info.popularity}</p>
+                            <p>{info.members} Members</p>
+                        </div>
+                        <div className="Status">
+                            <p>Status : {info.status}</p>
+                        </div>
+                        <div className="Dates-Published">
+                            <p>Dates Published:</p>
+                            <p>{info.published.string}</p>
+                        </div>
+                        <div className="Favorites">
+                            <p>Favorites:</p>
+                            <p>{info.favorites} Users</p>
+                        </div>
+                        <div className="Genre">
+                            <p>Genres:</p>
+                        </div>
+                        <div className="Genres">
+                            {genre()}
+                        </div>
+                        <div className="Author">
+                            <p>Author: {info.authors[0].name}</p>
+                        </div>
+                        {info.volumes
+                            ? <div className="VolChap">
+                                <p>Volumes: {info.volumes}</p>
+                                <p>Chapters: {info.chapters}</p>
+                            </div>
+                            : <div className="VolChap">
+                                <p>Volumes: Ongoing</p>
+                                <p>Chapters: Ongoing</p>
+                            </div>
+                        }
+                        <div className="Extras">
+                        {info.related.Prequel
+                            ? <p>Prequel: {info.related.Prequel[0].name}</p>
+                            : <p>Prequel: None</p>
+                        }
+                        {info.related.Sequel
+                            ? <p>Sequel: {info.related.Sequel[0].name}</p>
+                            : <p>Sequel: None</p>
+                        }
+                        {info.related.Adaptation
+                            ? <p>Adaptation: {info.related.Adaptation[0].name}</p>
+                            : <p>Adaptation: None</p>
+                        }
+                        </div>
+                    </div>
+
+                </div>
+                    : <div id="wrapper">
+                        <div className="Content-Area">
+                            <img src= {titleholderImage2} className="title-bg1"/>
+                            <div className="col1">
+                                <div className="Title-Content1">
+                                    <img src={info.image_url} className="title-card2"/>
+                                    <p>{info.title}</p>
+                                </div>
+                                <div className="row2">
+                                    <div className="Rank2">
+                                        <p>Rank : {info.rank}</p>
+                                        <p>Score : {info.score}</p>
+                                        <p>({info.scored_by} votes)</p>
+                                    </div>
+                                    <div className="Popularity2">
+                                        <p>Popularity : {info.popularity}</p>
+                                        <p>{info.members} Members</p>
+                                    </div>
+                                </div>
+                                <div className="Status2">
+                                    <p>Status : {info.status}</p>
+                                </div>
+                            </div>
+                            <div className="Synopsis-Area">
+                                <div className="synopsis-container">
+                                    <div className="random-stylebox">
+                                        <div className="synopsis">
+                                            <p className="header">Synopsis</p>
+                                            <ReadMoreAndLess
+                                                className="extra content"
+                                                charLimit={250}
+                                                readMoreText=" read more"
+                                                readLessText=" read less">
+                                                {info.synopsis}
+                                            </ReadMoreAndLess>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    </div>  //change this to thinner       
+                )
+                :
+                null    
+            }
         </div>
-        </Fragment>
     );
 }
 
-export default MangaPage
+export default MangaPage;
