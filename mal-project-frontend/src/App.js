@@ -140,11 +140,14 @@ function App() {
     setShowAnime(false);
     setShowError(false);
     setSearchStatus("notpresearch");
+    console.log(type, "and ", typeOverride);
     if (type==="Manga" || typeOverride === "Manga") {
       setShowSingleManga(true);
+      setShowSingleAnime(false);
     } 
     else {
       setShowSingleAnime(true);
+      setShowSingleManga(false);
     }
   };
 
@@ -181,8 +184,8 @@ function App() {
         ? <header className="App-header">
             <div className="home-tabs" style={{display:"flex"}}>
                 <p onClick={()=>{setShowAnime(false); setShowManga(false)}} style={{border:((!showAnime && !showManga) ? "1px solid black": ""),margin: "5px"}}>Search</p>
-                <p onClick={()=>{setShowAnime(true); setShowManga(false)}} style={{border:(showAnime ? "1px solid black": ""),margin: "5px"}}>Anime</p>
-                <p onClick={()=>{setShowAnime(false); setShowManga(true)}} style={{border:(showManga ? "1px solid black": ""),margin: "5px"}}>Manga</p>
+                <p onClick={()=>{setShowAnime(true); setShowManga(false); setType("Anime")}} style={{border:(showAnime ? "1px solid black": ""),margin: "5px"}}>Anime</p>
+                <p onClick={()=>{setShowAnime(false); setShowManga(true); setType("Manga")}} style={{border:(showManga ? "1px solid black": ""),margin: "5px"}}>Manga</p>
             </div>
             <img src={logo} className="App-logo" alt="logo" />
             <p>
