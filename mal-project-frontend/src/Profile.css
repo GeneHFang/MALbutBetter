@@ -19,6 +19,10 @@
     padding: 2%;
 }
 
+.input-group{
+    width: auto !important; 
+}
+
 .Scroll{
     background-color: #2d2f33;
     color: #3B90FF;

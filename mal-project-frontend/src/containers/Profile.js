@@ -1,5 +1,5 @@
 import React, {useEffect, useState, Fragment} from 'react';
-import {Dropdown, DropdownButton, Button} from 'react-bootstrap';
+import {Dropdown, DropdownButton, Button, InputGroup, FormControl} from 'react-bootstrap';
 import UserStats from './UserStats';
 import ScrollingList from './ScrollingList';
 import '../Profile.css';
@@ -47,6 +47,7 @@ const Profile = (props) => {
     //state needed for filtering
     const [unfiltered, setUnfiltered]= useState([]);
     const [filterName, setFilterName] = useState("");
+    const [filterSearch, setFilterSearch] = useState("");
 
 
     //resizing/reposition state
@@ -270,6 +271,25 @@ const Profile = (props) => {
         sort(sortName);
     }, [ascDesc]);
 
+    useEffect(()=>{
+        if (filterSearch.split(" ").join("").length > 2){
+            if (!unfiltered[0]) {setUnfiltered([...jsonArray]);}
+            let arr = [];
+
+            jsonArray.forEach(ele => {
+                let title =  ele.title ? ele.title.split(" ").join("").toLowerCase() : "";
+                let titleEng = ele.title_english ? ele.title_english.split(" ").join("").toLowerCase(): "";
+                // debugger;
+
+                if (title.includes(filterSearch.split(" ").join("").toLowerCase()) || titleEng.includes(filterSearch.split(" ").join("").toLowerCase())){
+                    arr.push(ele);
+                }
+            });
+            setJsonArray(arr);
+        }
+        else if (filterSearch.length === 0 && unfiltered[0]){ resetFilter(); }
+    }, [filterSearch])
+
     useEffect(() => {
         window.addEventListener("resize", updateWidthAndHeight);
         return () => window.removeEventListener("resize", updateWidthAndHeight);
@@ -332,7 +352,7 @@ const Profile = (props) => {
     //         );
     // }
 
-    const stats = () =>{
+    const stats = (orientation) =>{
         let type = showAnime ? "Anime" : "Manga";
         let parts = showAnime ? "Episodes" : "Chapters";
         let verb = showAnime ? "watched" : "read";
@@ -341,19 +361,71 @@ const Profile = (props) => {
 
         return ( props.userJson[jsonKey] 
             ?
-                <div className="stats" style={{position:"relative"}}>
-                    <img src={statCard} style={{position:"absolute"}}/>
-                    <div style={{position:"absolute", top:"-50px"}}>
-                        {type} Completed : {props.userJson[jsonKey].completed}<br/>
-                        {type} Dropped : {props.userJson[jsonKey].dropped}<br/>
-                        {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]} <br/>
-                        {type} On Hold : {props.userJson[jsonKey].on_hold}<br/>
-                        {type} Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}<br/>
-                        {type} Re{verb} : {props.userJson[jsonKey][`re${verb}`]}<br/>
-                        {type} Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}<br/>
-                        Average Score Given : {props.userJson[jsonKey].mean_score}<br/>
+                orientation === "wide" 
+                ?
+                    <div className="stats">
+                        <img src={statCard}/>
+                        {/* for regular view, left ~42% */}
+                        <div style={{position:"absolute", top:"30%", left:"15%", display:"flex", flexDirection:"column", fontSize:"22px", width:"800px"}}>
+                            <div className="statRow" style={{ flex:"1", display:"flex", flexDirection:"row"}}>
+                                <span className="fillerBig" style={{flex:"35%"}}/>
+                                <span style={{textAlign:"left", whiteSpace:"nowrap",flex:"25%"}}>
+                                    Completed : {props.userJson[jsonKey].completed}
+                                    <br/>
+                                    Dropped : {props.userJson[jsonKey].dropped}
+                                </span>
+                                <span className="fillerSmall" style={{flex:"17%"}}/>
+                                <span style={{textAlign:"left", whiteSpace:"nowrap",flex:"25%"}}>
+                                    {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]}
+                                    <br/>
+                                    On Hold : {props.userJson[jsonKey].on_hold}
+                                </span>
+                                <span className="fillerSmall" style={{flex:"30%"}}/>
+                            </div>
+                            <div className="separator" style={{flex:"1"}}> <br/><br/></div>
+                            <div className="statRow" style={{ flex:"1", display:"flex", flexDirection:"row"}}>
+                                <span className="fillerSmall" style={{flex:"11%"}}/>
+                                <span style={{textAlign:"left",whiteSpace:"nowrap",flex:"25%"}}>
+                                    Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}
+                                    <br/>
+                                    Re{verb} : {props.userJson[jsonKey][`re${verb}`]}
+                                </span>
+                                <span className="fillerSmall" style={{flex:"6.5%"}}/>
+                                <span style={{textAlign:"left",whiteSpace:"nowrap",flex:"25%"}}>
+                                    Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}
+                                    <br/>
+                                    Average Score Given : {props.userJson[jsonKey].mean_score}
+                                </span>
+                                <span className="fillerBig" style={{flex:"25%"}}/>
+                            </div> 
+                        </div>
                     </div>
-                </div>
+                : 
+                    <div className="stats">
+                            <img style={{width:"450px",height:"750px"}} src={statCard}/>
+                            {/* for regular view, left ~42% */}
+                            <div style={{position:"absolute", top:"30%", display:"flex", flexDirection:"column", fontSize:"16px", width:"400px",left:"50%", transform: "translateX(-50%)"}}>
+                                <div className="statRow1" style={{transform:"translateX(5%)"}}>
+                                        Completed : {props.userJson[jsonKey].completed}
+                                        <br/>
+                                        Dropped : {props.userJson[jsonKey].dropped} 
+                                        <br/>
+                                        {parts} {verb.charAt(0).toUpperCase()+verb.slice(1)} : {props.userJson[jsonKey][`${parts.toLowerCase()}_${verb}`]}
+                                        <br/>
+                                        On Hold : {props.userJson[jsonKey].on_hold}
+                                        </div>
+                                <br/><br/>
+                                <div className="statRow2" style={{transform:"translateY(20%)"}}>
+                                        Planning to {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)} : {props.userJson[jsonKey][`plan_to_${presentTense}`]}
+                                        <br/>
+                                        Re{verb} : {props.userJson[jsonKey][`re${verb}`]}
+                                        <br/>
+                                        Currently {presentTense.charAt(0).toUpperCase()+presentTense.slice(1)}ing : {props.userJson[jsonKey][`${presentTense}ing`]}
+                                        <br/>
+                                        Average Score Given : {props.userJson[jsonKey].mean_score}
+                                </div> 
+                            </div>
+                        </div>
             :
                 null
         );
@@ -464,6 +536,16 @@ const Profile = (props) => {
         return (
             <Fragment >
                  <div style={{display:"flex", justifyContent:"center"}}>
+                    <InputGroup>
+                        <FormControl
+                            placeholder = "Search"
+                            value = {filterSearch}
+                            onChange ={ e => {
+                                setFilterSearch(e.target.value);
+                                }
+                            }
+                        />
+                    </InputGroup>
                     {/* <Button variant = "outline-primary" onClick={fetchDetails}>Get More Details</Button> */}
                     <DropdownButton variant = "outline-secondary" title = {showAnime ? ListType[animeListType] : ListType[mangaListType] } id = "input-group-dropdown">
                                     <Dropdown.Item href="#" onClick = {changeType} searchval="favorites">Favorites</Dropdown.Item>
@@ -516,24 +598,30 @@ const Profile = (props) => {
 
     return(
         
-        <Fragment>
+        <div >
             {
-            width >= 1100 ?
+                width >= 1100 ?
                 <div className="profile" style={{display:"flex"}}>
                     <div style={{flex:"50%"}}><img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} /></div>
                     
                     <div style={{flex:"50%"}}>
+
                         {props.userJson.about ?  <p className="profile-about">{props.userJson.about}</p> : <p>Bio Placeholder</p>}
-                        {stats()}
+                        
+                        <div style={{position:"relative"}}> 
+                            {stats("wide")}
+                        </div>
                     </div>
                 </div>
             :
-                <div className="profile" >
+            <div className="profile" >
                 <div ><img src={props.userJson.image_url ? props.userJson.image_url : defaultImage} style={{width:250, height:300}} /></div>
                 
                 <div >
                     {props.userJson.about ?  <p className="profile-about">{props.userJson.about}</p> : <p>Bio Placeholder</p>}
-                    {stats()}
+                    <div style={{position:"relative"}}> 
+                        {stats("long")}
+                    </div>
                 </div>
                 </div>
             }
@@ -554,7 +642,7 @@ const Profile = (props) => {
             }
             {renderList()}
         </div>
-        </Fragment>
+        </div>
     );
     
 }
