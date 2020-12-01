@@ -11,8 +11,8 @@ import MangaPage from './containers/MangaPage';
 import ScrollingList from './containers/ScrollingList';
 import './App.css';
 
-function App() { 
-  //const [number, setNumber] = useState(1);
+function App() {
+  //State for search and containers for results
   const [searchStatus, setSearchStatus] = useState("presearch");
   const [SearchType1, setSearchType1] = useState("");
   const [userJson, setUserJson] = useState({});
@@ -20,38 +20,38 @@ function App() {
   const [mangaJson, setMangaJson] = useState({});
   const [errorMsg, setErrorMsg] = useState({});
   
-  //Show for top
+  //Show flags for top
   const [showManga, setShowManga] = useState(false);
   const [showAnime, setShowAnime] = useState(false);
 
-  //Show for single result
+  //Show flags for single result
   const [showSingleManga, setShowSingleManga] = useState(false);
   const [showSingleAnime, setShowSingleAnime] = useState(false);
   const [mal_id, setmal_id] = useState({});
   const [showError, setShowError] = useState(true);
   const [searchBarStyle, setSearchBarStyle] = useState({});
 
-  //form control
+  //form control for search
   const [query, setQuery] = useState("");
   const [type, setType] = useState("User");
   const [typeOverride, setTypeOverride] = useState("");
 
+  //Lifecycles
   useEffect(()=>{
     return ()=>{
       //cleanup, warning for state update on unmounted component. Get to this later
     }
-  }, [])
+  }, []);
 
+  //Monitor
   useEffect(()=>{
     let res = 
       SearchType1 === "Anime" 
           ? animeJson.results 
           : mangaJson.results;
-    if (searchStatus!=="presearch"&& res.length === 0)
-    {
+    if (searchStatus!=="presearch"&& res.length === 0){
       setShowError(true);
-      setErrorMsg({error: "No Results", message: "Please check your spelling or searching using a more specific term"})    
-      
+      setErrorMsg({error: "No Results", message: "Please check your spelling or searching using a more specific term"});   
     }
   },[animeJson, mangaJson]);
 
@@ -77,11 +77,11 @@ function App() {
       .then(res=>res.json())
       .then(json=>{
         setUserJson(json);
-        console.log(json);
+        //console.log(json);
         if (json.error) {
           setShowError(true);
           setErrorMsg({error:"Error! "+json.error, message: json.message})
-          console.log(json.error);
+          //console.log(json.error);
         }
       })
       .catch(error=>{
@@ -91,7 +91,7 @@ function App() {
           message = "Unable to find user!"
         }
         setErrorMsg({error:"Error! "+ message});
-        console.log(error.message);
+        //console.log(error.message);
       });
     }
     if (type === "Anime"){
@@ -118,8 +118,8 @@ function App() {
       return <Profile userJson={userJson} resetPage={setSearchStatus} resetUser={setUserJson} showSingle={showSingle} setType={setTypeOverride}/>
     }
     else if (SearchType1 === "Anime" || SearchType1 === "Manga") {
-      console.log("here with SearchType1===Anime ", SearchType1==="Anime" );
-      console.log("This is the animeJson: ", animeJson);
+      //console.log("here with SearchType1===Anime ", SearchType1==="Anime" );
+      //console.log("This is the animeJson: ", animeJson);
       return <SearchPage resJson={SearchType1==="Anime" ? animeJson : mangaJson} reset={setSearchStatus} showSingle={showSingle}/> 
     }
     else if (showSingleAnime){
@@ -131,7 +131,7 @@ function App() {
     }
   }
   const showSingle = (mal_id) => {
-    console.log("json rn ",animeJson, mangaJson, " and type", type);
+    //console.log("json rn ",animeJson, mangaJson, " and type", type);
     setSearchBarStyle({position:"absolute", backgroundColor:"rgba(0,0,0,0)"});
     setmal_id(mal_id);
     setSearchType1("");
@@ -140,7 +140,7 @@ function App() {
     setShowAnime(false);
     setShowError(false);
     setSearchStatus("notpresearch");
-    console.log(type, "and ", typeOverride);
+    //console.log(type, "and ", typeOverride);
     if (type==="Manga" || typeOverride === "Manga") {
       setShowSingleManga(true);
       setShowSingleAnime(false);
@@ -189,10 +189,7 @@ function App() {
             </div>
             <img src={logo} className="App-logo" alt="logo" />
             <p>
-              But Better
-            </p>
-            <p>
-              Interesting Text Here
+              Lightweight querying of MAL listings and users
             </p>
           
             {showAnime || showManga 
@@ -205,7 +202,7 @@ function App() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Worse Website
+              MAL Website
             </a>
           </header>
         : renderContent()

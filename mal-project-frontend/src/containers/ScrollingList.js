@@ -5,15 +5,12 @@ import useAnimeMangaSearch from '../hooks/useAnimeMangaSearch';
 
 const ScrollingList = (props) => {
 
+    //page numbers for infinite scroll
     const [page, setPage] = useState(1);
 
+    //details state
     const [detailDisplay, toggleDetailDisplay] = useState(false);
     const [objDetails, setObjDetails] = useState({});
-
-
-    const [mouseX, setMouseX] = useState(-1);
-    const [mouseY, setMouseY] = useState(-1);
-
     const [detailsPosition, setDetailsPosition] = useState({
         position: "absolute",
         border: "1px solid black",
@@ -24,11 +21,15 @@ const ScrollingList = (props) => {
 
     });
 
+    //Mouse position monitoring
+    const [mouseX, setMouseX] = useState(-1);
+    const [mouseY, setMouseY] = useState(-1);
+
+    
+    //infinite scrolling attributes
     const {loading, error, animeMangas, hasMore} = useAnimeMangaSearch(page, props.animemanga.searchType ? props.animemanga.searchType.toLowerCase() : "", props.notTop);
     
-    // useAnimeMangaSearch(page, props.animeManga.searchType);
-    //inf scrolling
-
+    //inf scrolling trigger
     const observer = useRef();
     const lastAnimeMangaElementRef = useCallback(node => {
             if (loading) { return; }
@@ -58,13 +59,11 @@ const ScrollingList = (props) => {
     };
 
     const getMousePosition = (x, y) => {
-        
-        // if (mouseEvent){
             setMouseX(x);
             setMouseY(y);
-        // }
     }; 
 
+    
     useEffect(()=>{
         // console.log("being moved");
         setDetailsPosition({...detailsPosition, left: mouseX, top: mouseY});
@@ -87,7 +86,8 @@ const ScrollingList = (props) => {
                     if(animeMangas.length===index+1){      
                         ref = lastAnimeMangaElementRef;
                     }
-                    return <MangaAnimeCard 
+                    return <MangaAnimeCard
+                            key={anime.mal_id} 
                             obj={anime}
                             mal_id={anime.mal_id}
                             rank={anime.rank} 
@@ -110,6 +110,7 @@ const ScrollingList = (props) => {
                         name = anime.name
                     }
                     return <MangaAnimeCard
+                            key={anime.mal_id}
                             obj={anime} 
                             mal_id={anime.mal_id} 
                             name={name} 

@@ -1,12 +1,11 @@
-import React, {useEffect, useState, Fragment} from 'react';
+import React, {Fragment} from 'react';
 import ScrollingList from './ScrollingList';
 
 const SearchPage = (props) => {
-
-    useEffect(()=>{
-        console.log("This is props of SearchPage: ",props);
-    }, []);
-
+    //debugging 
+    //useEffect(()=>{
+    //     console.log("This is props of SearchPage: ",props);
+    // }, []);
     return(
         
         <Fragment>

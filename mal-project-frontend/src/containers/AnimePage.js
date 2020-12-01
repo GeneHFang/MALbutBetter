@@ -1,20 +1,20 @@
 import React, {useEffect, useState, Fragment} from 'react';
-import {ReadMore} from 'react-read-more-less';
+//import {ReadMore} from 'react-read-more-less';
 import ReadMoreAndLess from 'react-read-more-less';
 import ReactPlayer from "react-player"
 import '../AnimePage.css'
 
-import defaultImage from '../images/background.jpg';
-import titleholderImage from '../images/Title Card Holder 1-2.png';
+// import defaultImage from '../images/background.jpg';
+// import titleholderImage from '../images/Title Card Holder 1-2.png';
 import titleholderImage2 from '../images/Title Card Holder2.png';
 import contentImage from '../images/Content Holder.png';
-import { getElementError } from '@testing-library/react';
+// import { getElementError } from '@testing-library/react';
 
 const AnimePage = (props) => {
     const [info, setInfo] = useState({});
-    const [readMore, setReadMore] = useState(false);
-    const [width, setWidth] = React.useState(window.innerWidth);
-    const [height, setHeight] = React.useState(window.innerHeight);
+    // const [readMore, setReadMore] = useState(false);
+    const [width, setWidth] = useState(window.innerWidth);
+    const [height, setHeight] = useState(window.innerHeight);
 
     const updateWidthAndHeight = () => {
         setWidth(window.innerWidth);
@@ -31,7 +31,7 @@ const AnimePage = (props) => {
         })
     },[])
 
-    React.useEffect(() => {
+    useEffect(() => {
         window.addEventListener("resize", updateWidthAndHeight);
         return () => window.removeEventListener("resize", updateWidthAndHeight);
     });
@@ -137,7 +137,7 @@ const AnimePage = (props) => {
                                 </div>
                             </div>
                     </div>
-                    </div>  //change this to thinner       
+                    </div>       
                 )
                 :
                 null    
@@ -147,45 +147,3 @@ const AnimePage = (props) => {
 }
 
 export default AnimePage;
-
-/*
-<div className="Content-Area">
-                        <img src= {titleholderImage} className="title-bg"/>
-                        <div className="row">
-                            <div className="Title-Content">
-                                <img src={info.image_url} className="title-card"/>
-                                <p>{info.title}</p>
-                            </div>
-                            <div className="col">
-                                <div className="Rank">
-                                    <p>Rank : {info.rank}</p>
-                                    <p>Score : {info.score}</p>
-                                    <p>({info.scored_by} votes)</p>
-                                </div>
-                                <div className="Popularity">
-                                    <p>Popularity : {info.popularity}</p>
-                                    <p>{info.members} Members</p>
-                                </div>
-                            </div>
-                            <div className="Status">
-                                <p>Status : {info.status}</p>
-                            </div>
-                        </div>
-                        <div className="Synopsis-Area">
-                            <div className="synopsis-container">
-                                <div className="random-stylebox">
-                                    <div className="synopsis">
-                                        <p className="header">Synopsis</p>
-                                        <ReadMoreAndLess
-                                            className="extra content"
-                                            charLimit={250}
-                                            readMoreText=" read more"
-                                            readLessText=" read less">
-                                            {info.synopsis}
-                                        </ReadMoreAndLess>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-*/

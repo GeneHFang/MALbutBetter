@@ -1,6 +1,7 @@
 import React, {Fragment, useState, useEffect} from 'react';
 
 const MangaAnimeCard = (props) => {
+    //State for timer and detail hover
     const [timer, setTimer] = useState(null);
     const [flagged, setFlag] = useState(false);
     const [style, setStyle] = useState({
@@ -13,40 +14,36 @@ const MangaAnimeCard = (props) => {
 
  
     //window size check
-    const [width, setWidth] = React.useState(window.innerWidth);
-    const [height, setHeight] = React.useState(window.innerHeight);
+    const [width, setWidth] = useState(window.innerWidth);
+    const [height, setHeight] = useState(window.innerHeight);
 
+    
+    //lifecycle functions
+    useEffect(() => {
+        window.addEventListener("resize", updateWidthAndHeight);
+        return () => window.removeEventListener("resize", updateWidthAndHeight);
+    });
+    useEffect(()=>{
+        return ()=>clearTimeout(timer);
+    }, []);
+   
+    //Event listener callbacks
     const updateWidthAndHeight = () => {
             setWidth(window.innerWidth);
             setHeight(window.innerHeight);
     };
-
-    React.useEffect(() => {
-        window.addEventListener("resize", updateWidthAndHeight);
-        return () => window.removeEventListener("resize", updateWidthAndHeight);
-    });
-
-    useEffect(()=>{
-        
-        return ()=>clearTimeout(timer);
-
-    }, []);
-
     const mouseMove = (e)=> {
         props.mousePosition(e.pageX,e.pageY);
     }
-
     const mouseOut = ()=>{
         setStyle({...style, backgroundColor:""});
         clearTimeout(timer);
         props.displayDetails(false);
         setFlag(false);
     }
-
     const mouseOver = (e) => {
         setStyle({...style, backgroundColor:"#484c53"});
         clearTimeout(timer);
-        // let e = event.nativeEvent
         if (!flagged) {
             setFlag(true);
             props.mousePosition(e.pageX,e.pageY);
@@ -56,15 +53,11 @@ const MangaAnimeCard = (props) => {
             props.displayDetails(true, props.obj);           
         },700));
     }
-
     const handleClick = () => {
         props.showSingle(props.mal_id);
     }
 
-    //before mouseMove (onMouseOver={(e)=>props.displayDetails(true, props.name)})
     return(
-        // <a 
-        //  href={props.url}>
             <div 
                 style={style}
                 onMouseOver={mouseOver} 
@@ -89,9 +82,7 @@ const MangaAnimeCard = (props) => {
                         {/* Anime/Manga card  */}
                         </div>
                     }
-                    
             </div>
-        // </a>
     );
 }
 

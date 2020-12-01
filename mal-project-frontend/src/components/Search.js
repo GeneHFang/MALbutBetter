@@ -1,17 +1,10 @@
-import React, {useState} from 'react'; 
-import { InputGroup, DropdownButton, Dropdown, FormControl, Form } from 'react-bootstrap';
+import React from 'react'; 
+import {InputGroup, DropdownButton, Dropdown, FormControl} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 
 function Search(props) {
-    // const [searchType, setSearchType] = useState("User");
-    // const [searchQuery, setSearchQuery] = useState("");
 
     const parseQuery = () => {
-        /*
-        if (searchType==="User"){
-            return searchQuery;
-        }
-        */
         return props.query;
     } 
 
@@ -29,15 +22,13 @@ function Search(props) {
         }
         
 
-        console.log("This is the ",searchURL);
-        //props.searchType(searchType);
+        //console.log("This is the ",searchURL);
         props.search(searchURL, props.type);
     }
 
     const handleDropdown = (e) => {
         // console.log(e.target.innerText);
         props.setType(e.target.innerText);
-        // setSearchType(e.target.innerText);
     }
 
     return (
@@ -65,8 +56,6 @@ function Search(props) {
                                 href="#"
                                 onClick = {handleDropdown}
                                 >Manga</Dropdown.Item>
-
-
                         </DropdownButton>
                         <FormControl
                             placeholder = {`Name of ${props.type}`}
