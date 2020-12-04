@@ -13,7 +13,7 @@ const MangaAnimeDetails = (props) => {
   const [volumeNum, setVolumeNum] = useState("");
 
 
-  //Prevents memory leak
+  //should prevent memory leak
   useEffect(() => {
       return () => {
         window.removeEventListener('mousemove', () => {})
@@ -22,7 +22,7 @@ const MangaAnimeDetails = (props) => {
     }, []);
 
   useEffect(() => {
-    console.log(props.obj);
+    // console.log(props.obj);
     setName(props.obj.title);
     setScore(props.obj.score);
     if (props.obj.start_date){
@@ -80,8 +80,6 @@ const MangaAnimeDetails = (props) => {
         { 
           parseDetails()
         } 
-
-
       </div>
   );
 }

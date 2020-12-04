@@ -1,13 +1,11 @@
 import React, {useEffect, useState, Fragment} from 'react';
 import {Dropdown, DropdownButton, Button, InputGroup, FormControl} from 'react-bootstrap';
-import UserStats from './UserStats';
 import ScrollingList from './ScrollingList';
 import '../Profile.css';
 
 //temp img
 import defaultImage from '../images/ProfilePlaceholderTemp.jpg';
 import statCard from '../images/Stats_Card.png';
-import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
 const Profile = (props) => {
     // debugger
@@ -54,21 +52,6 @@ const Profile = (props) => {
     const [width, setWidth] = useState(window.innerWidth);
     const [height, setHeight] = useState(window.innerHeight);
 
-    // const [totalExists, setTotalExists] = useState(-1);
-
-    // const [watching, setWatching] = useState([]);
-    // const [reading, setReading] = useState([]);
-    // const [completedAnime, setCompletedAnime] = useState([]);
-    // const [completedManga, setCompletedManga] = useState([]);
-    // const [heldAnime, setHeldAnime] = useState([]);
-    // const [heldManga, setHeldManga] = useState([]);
-    // const [droppedAnime, setDroppedAnime] = useState([]);
-    // const [droppedManga, setDroppedManga] = useState([]);
-    // const [ptw, setPtw] = useState([]);
-    // const [ptr, setPtr] = useState([]);
-    // const [favesAnime, setFavesAnime] = useState([]);
-    // const [favesManga, setFavesManga] = useState([]);
-
 
 
     const [jsonArray, setJsonArray] = useState([]); 
@@ -104,58 +87,35 @@ const Profile = (props) => {
         let totalScore = 0;
         let totalNoVotes = 0;
         //total ep/chapters
-        let airingOrPublishing = -1;
+        // let airingOrPublishing = -1;
         let totalConsumed = 0;
         // let totalExists = 0;
 
         json[type].forEach((animemanga)=>{
             console.log(animemanga["mal_id"]);
             setMalIDs(prev => [...prev, animemanga["mal_id"]]);
-            // let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
-            // const response = await fetch(url);
-            // const innerJson = await response.json();
 
-
-            // arr.push(innerJson);
             arr.push(animemanga)
             totalScore += animemanga.score;
             if(!animemanga.score) {totalNoVotes++;}
-
-            // airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
-            // if (airingOrPublishing === 2) {//no longer airing or publishing
-                // console.log(animemanga.watched_episodes ? `watched: ${animemanga.watched_episodes}` : `read: ${animemanga.read_chapters}`)
                 totalConsumed += animemanga.watched_episodes || animemanga.watched_episodes===0 ? animemanga.watched_episodes : animemanga.read_chapters;
-                // totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
-            // }
         });
-        console.log("Size of array: ", arr.length);
+        // console.log("Size of array: ", arr.length);
 
         while(arr.length && arr.length%300===0){
             pageNum++;
             url = `https://api.jikan.moe/v3/user/${username}/${type}list/${args}/${pageNum}`;
             const response = await fetch(url);
             const json = await response.json();
-            json[type].forEach((animemanga)=>{
-                // let url = `https://cors-anywhere.herokuapp.com/https://api.jikan.moe/v3/${type}/${animemanga["mal_id"]}`;
-                // const response = await fetch(url);
-                // const innerJson = await response.json();
-                
+            json[type].forEach((animemanga)=>{                
                 setMalIDs(prev => [...prev, animemanga["mal_id"]]);
-    
-    
-                // arr.push(innerJson);
                 arr.push(animemanga);
                 totalScore += animemanga.score;
                 if(!animemanga.score) {totalNoVotes++;}
-                
-                // airingOrPublishing = animemanga.airing_status ? animemanga.airing_status : animemanga.publishing_status;
-                // if (airingOrPublishing === 2) {//no longer airing or publishing
-                    totalConsumed += animemanga.watched_episodes || animemanga.watched_episodes===0 ? animemanga.watched_episodes : animemanga.read_chapters;
-                    // totalExists += animemanga.total_episodes ? animemanga.total_episodes : animemanga.total_chapters;
-                // }
+                totalConsumed += animemanga.watched_episodes || animemanga.watched_episodes===0 ? animemanga.watched_episodes : animemanga.read_chapters;
             });
             
-            console.log("Size of array: ", arr.length);
+            // console.log("Size of array: ", arr.length);
         }
         totalScore = Math.round(((totalScore / (arr.length-totalNoVotes))+Number.EPSILON)*100)/100;
         setAverageScore(totalScore ? totalScore : 0);
@@ -206,44 +166,29 @@ const Profile = (props) => {
     useEffect(() => {
         const f = async ()=> {
             if (props.userJson.favorites){
-                console.log("I am here first")
+                // console.log("I am here first")
                 let type = "";
                 if (showAnime){              
                     type = "anime";
-                    // if(animeListType==="favorites" && props.userJson.favorites.anime){
-                    //     await fetchAnimeManga(type, props.userJson.favorites.anime);
-                    // }
-                    // else{
-                    //     await fetchList(props.userJson.username, type, animeListType);
-                    // }
                     await fetchCallBack(type);
-                    console.log(jsonArray);
-                    console.log(resCache);
+                    // console.log(jsonArray);
+                    // console.log(resCache);
                 }
                 else if (showManga){
                     type = "manga"                
-                    // if(mangaListType==="favorites" && props.userJson.favorites.manga){
-                    //     await fetchAnimeManga(type, props.userJson.favorites.manga);
-                    // }
-                    // else{
-                    //     await fetchList(props.userJson.username, type, mangaListType);
-                    // }
                     await fetchCallBack(type);
                     setResCache(resCache => {
                         return {...resCache, manga: [...jsonArray]}
                     })
                 }
             }
-        
-            // setJsonArray(array);
         }
-        
         f();
     }, [props.userJson, animeListType, mangaListType]);
     
     useEffect( () => {
         const f = async () => {
-            console.log(resCache);
+            // console.log(resCache);
             if (showAnime && resCache.anime) {
                 if (resCache.anime.length > 0) {
                     setJsonArray([...resCache.anime]);
@@ -279,7 +224,6 @@ const Profile = (props) => {
             jsonArray.forEach(ele => {
                 let title =  ele.title ? ele.title.split(" ").join("").toLowerCase() : "";
                 let titleEng = ele.title_english ? ele.title_english.split(" ").join("").toLowerCase(): "";
-                // debugger;
 
                 if (title.includes(filterSearch.split(" ").join("").toLowerCase()) || titleEng.includes(filterSearch.split(" ").join("").toLowerCase())){
                     arr.push(ele);
@@ -301,9 +245,8 @@ const Profile = (props) => {
 
     const changeType = (e) => {
         // debugger;
-        console.log(e.target.getAttribute("searchval"));
+        // console.log(e.target.getAttribute("searchval"));
         setSortName("");
-
         if (showAnime){
             setAnimeListType(e.target.getAttribute("searchval"));
         }
@@ -316,10 +259,6 @@ const Profile = (props) => {
         setShowAnime(anime);
         setShowManga(manga);
         props.setType(anime ? "Anime" : "Manga");
-        // setShowStats(stats);
-        // setResCache(resCache => {
-        //     return {...resCache, [anime ? "anime" : "manga"]: [...jsonArray]}
-        // });
         setJsonArray([]);
     }
 
@@ -333,24 +272,6 @@ const Profile = (props) => {
         "plantowatch" : "Plan to Watch",
         "plantoread" : "Plan to Read"
     };
-
-
-
-    // const logState = ()=> {
-    //     console.log("\nwatching: ",watching,
-    //         "\nreading: ",reading,
-    //         "\ncompleteA: ",completedAnime,
-    //         "\ncompleteM: ",completedManga,
-    //         "\nheldA: ",heldAnime,
-    //         "\nheldM: ",heldManga,
-    //         "\ndroppedA: ",droppedAnime,
-    //         "\ndroppedM: ",droppedManga,
-    //         "\npw: ", ptw,
-    //         "\npr: ",ptr,
-    //         "\nfA: ",favesAnime,
-    //         "\nfM: ",favesManga,
-    //         );
-    // }
 
     const stats = (orientation) =>{
         let type = showAnime ? "Anime" : "Manga";
@@ -433,25 +354,9 @@ const Profile = (props) => {
     }
 
     const renderList = () =>{
-        // if (showStats){
-        //     return <UserStats/>
-        // }
-        // else {
         return <ScrollingList animemanga={jsonArray} notTop={true} profile={true} showSingle={props.showSingle}/>
-        // }
+        
     };
-
-    // const fetchDetails = () => {
-    //     console.log("here with ", malIDs);
-    //     malIDs.forEach(async (id) => {
-    //         let url = `https://api.jikan.moe/v3/${type}/${id}`;
-    //         const response = await fetch(url);
-    //         const innerJson = await response.json();
-
-    //         console.log(innerJson);
-
-    //     })
-    // }
 
     //Not complete
     const sort = (by) => {

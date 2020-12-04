@@ -1,20 +1,20 @@
 import React, {useEffect, useState, Fragment} from 'react';
-import {ReadMore} from 'react-read-more-less';
+// import {ReadMore} from 'react-read-more-less';
 import ReadMoreAndLess from 'react-read-more-less';
-import ReactPlayer from "react-player"
+// import ReactPlayer from "react-player"
 import '../MangaPage.css'
 
-import defaultImage from '../images/background.jpg';
-import titleholderImage from '../images/Title Card Holder 1-2.png';
+// import defaultImage from '../images/background.jpg';
+// import titleholderImage from '../images/Title Card Holder 1-2.png';
 import titleholderImage2 from '../images/Title Card Holder2.png';
 import contentImage from '../images/Content Holder.png';
-import { getElementError } from '@testing-library/react';
+// import { getElementError } from '@testing-library/react';
 
 const MangaPage = (props) => {
     const [info, setInfo] = useState({});
-    const [readMore, setReadMore] = useState(false);
-    const [width, setWidth] = React.useState(window.innerWidth);
-    const [height, setHeight] = React.useState(window.innerHeight);
+    // const [readMore, setReadMore] = useState(false);
+    const [width, setWidth] = useState(window.innerWidth);
+    const [height, setHeight] = useState(window.innerHeight);
 
     const updateWidthAndHeight = () => {
         setWidth(window.innerWidth);
@@ -31,7 +31,7 @@ const MangaPage = (props) => {
         })
     },[])
 
-    React.useEffect(() => {
+    useEffect(() => {
         window.addEventListener("resize", updateWidthAndHeight);
         return () => window.removeEventListener("resize", updateWidthAndHeight);
     });
@@ -150,7 +150,7 @@ const MangaPage = (props) => {
                                 </div>
                             </div>
                     </div>
-                    </div>  //change this to thinner       
+                    </div>      
                 )
                 :
                 null    
